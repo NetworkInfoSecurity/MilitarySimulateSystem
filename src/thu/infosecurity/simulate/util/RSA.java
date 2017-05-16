@@ -1,6 +1,10 @@
 package thu.infosecurity.simulate.util;
 import thu.infosecurity.simulate.util.BaseElement.BigNum;
 import thu.infosecurity.simulate.util.NumberTheory.RSABase;
+import thu.infosecurity.simulate.util.NumberTheory.BigNumGCD;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by DaFei-PC on 2017-05-16.
@@ -11,10 +15,14 @@ public class RSA {
 
 
         String plain = "dfadgewrtgsfdhgyreq tg34 r5qtyq 543 5y543 4";
-        String e = "22461621624637251777456300960187849691598603339644585974793939";
-        String d = "7137485809071382629313599946032959736135820990003992923434211286437749856564132416533151563536365992928134427594801669677272579";
-        String n = "9975195964643031981159776199535538203609239398164642965205824552352422199365479580668103900418271513891622374287002737177845049";
 
+        /*Key generation testing*/
+        Map<String, String> key = RSA_GenerateKey(20, 10);
+        String e = key.get("e");
+        String d = key.get("d");
+        String n = key.get("n");
+
+        /*RSA testing*/
         String enStr = RSA_Encrypt(plain, e, n);
         System.out.println("encrypted = " + enStr);
 
@@ -33,16 +41,29 @@ public class RSA {
         return RSABase.decrypt(encryptText, privateKey, pn);
     }
 
-    public static String RSA_GenerateKey(int length, int accuracy){
-
+    /**
+     * 生成秘钥（e,d,n）其中(e,n)为公钥，(d,n)为私钥
+     * @param length
+     * @param accuracy
+     * @return
+     */
+    public static Map<String, String> RSA_GenerateKey(int length, int accuracy){
         try{
             BigNum p = BigNum.generatePrime(length, accuracy);
+            BigNum q = BigNum.generatePrime(length, accuracy);
+            BigNum n = p.bigNumMul(q);
+            BigNum phi_n = p.bigNumSub(BigNum.BigOne).bigNumMul(q.bigNumSub(BigNum.BigOne));
+            BigNum e = BigNum.generateNumberPrimeTo(phi_n);
+            BigNum d = BigNumGCD.getReverse(e, phi_n);
 
+            Map<String, String> retMap = new HashMap<>();
+            retMap.put("e", e.toString());
+            retMap.put("d", d.toString());
+            retMap.put("n", n.toString());
+            return retMap;
         }catch (Exception e){
             System.out.println(e.toString());
         }
-
-
         return null;
     }
 

@@ -690,7 +690,7 @@ public class BigNum {
                 break;
             }
             long time3 = System.currentTimeMillis();
-            System.out.println("Round " + round +", Generating Time"+(time2-time1) +", TestingTime: " + (time3-time2));
+//            System.out.println("Round " + round +", Generating Time"+(time2-time1) +", TestingTime: " + (time3-time2));
         }
         return prime;
     }
@@ -704,7 +704,7 @@ public class BigNum {
         while (true) {
             BigNum a = BigNum.generateBigNumByLength(length);
             if(BigNumGCD.gcd_b(a, n).isSame(new BigNum(1))){
-                System.out.println("(a, n) = 1, a = " + a);
+//                System.out.println("(a, n) = 1, a = " + a);
                 return a;
             }
         }

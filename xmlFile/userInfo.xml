@@ -1,0 +1,22 @@
+<userList>
+    <user>
+        <name>WangNan</name>
+        <publicKey>5</publicKey>
+        <privateKey>6</privateKey>
+        <secretLeven>secretLeveltest</secretLeven>
+        <ranges>
+            <range>testa</range>
+            <range>testb</range>
+        </ranges>
+    </user>
+    <user>
+        <name>WangNan222</name>
+        <publicKey>5222</publicKey>
+        <privateKey>6222</privateKey>
+        <secretLeven>secretLeveltes222t</secretLeven>
+        <ranges>
+            <range>test222a</range>
+            <range>test222b</range>
+        </ranges>
+    </user>
+</userList>

@@ -1,22 +1,64 @@
+
+<!--
+secretLevel     采用BLP模型，分文秘密'S'，机密'C'，绝密'T'三个等级
+ranges:         海军'S'，陆军'G'，空军'A'
+-->
+
 <userList>
     <user>
-        <name>WangNan</name>
-        <publicKey>5</publicKey>
-        <privateKey>6</privateKey>
-        <secretLeven>secretLeveltest</secretLeven>
+        <name>Chen Weihang</name>
+        <publicKey>180854786745822734968547923111966820333,7785391487685444343</publicKey>
+        <privateKey>180854786745822734968547923111966820333,125735460058687390574064346050329735047</privateKey>
+        <secretLevel>T</secretLevel>
         <ranges>
-            <range>testa</range>
-            <range>testb</range>
+            <range>S</range>
+            <range>G</range>
+            <range>A</range>
         </ranges>
     </user>
     <user>
-        <name>WangNan222</name>
-        <publicKey>5222</publicKey>
-        <privateKey>6222</privateKey>
-        <secretLeven>secretLeveltes222t</secretLeven>
+        <name>Wang Nan</name>
+        <publicKey>484986057887349446282748452562050283673,4481228382178645219</publicKey>
+        <privateKey>484986057887349446282748452562050283673,311143577012482823639108032227602665579</privateKey>
+        <secretLevel>C</secretLevel>
         <ranges>
-            <range>test222a</range>
-            <range>test222b</range>
+            <range>G</range>
+        </ranges>
+    </user>
+    <user>
+        <name>Sun Lin</name>
+        <publicKey>5991842715850545215842288803859621264207,81774940678644322147</publicKey>
+        <privateKey>5991842715850545215842288803859621264207,4369135254356852362357928842201645594547</privateKey>
+        <secretLevel>C</secretLevel>
+        <ranges>
+            <range>G</range>
+        </ranges>
+    </user>
+    <user>
+        <name>Li Xu</name>
+        <publicKey>4498702689568740324165515140546033102619,56499188281434154099</publicKey>
+        <privateKey>4498702689568740324165515140546033102619,3537420959150237106182912551206221495083</privateKey>
+        <secretLevel>S</secretLevel>
+        <ranges>
+            <range>G</range>
+        </ranges>
+    </user>
+    <user>
+        <name>Zhang Yafei</name>
+        <publicKey>833409598287268725695160112053347208097,9738126678639348705</publicKey>
+        <privateKey>833409598287268725695160112053347208097,394849468514267047125611198861894021245</privateKey>
+        <secretLevel>S</secretLevel>
+        <ranges>
+            <range>G</range>
+        </ranges>
+    </user>
+    <user>
+        <name>UnauthorizedPeople</name>
+        <publicKey>6985474928290835767300603608961963143397,52945119327196911743</publicKey>
+        <privateKey>6985474928290835767300603608961963143397,6390291320382700384590091382479120641407</privateKey>
+        <secretLevel>C</secretLevel>
+        <ranges>
+            <range>A</range>
         </ranges>
     </user>
 </userList>

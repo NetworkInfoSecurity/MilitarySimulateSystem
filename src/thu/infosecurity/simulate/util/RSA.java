@@ -22,6 +22,10 @@ public class RSA {
         String d = key.get("d");
         String n = key.get("n");
 
+        System.out.println(n + "," + e);
+        System.out.println(n + "," + d);
+
+
         /*RSA testing*/
         String enStr = RSA_Encrypt(plain, e, n);
         System.out.println("encrypted = " + enStr);
@@ -43,8 +47,8 @@ public class RSA {
 
     /**
      * 生成秘钥（e,d,n）其中(e,n)为公钥，(d,n)为私钥
-     * @param length
-     * @param accuracy
+     * @param length        秘钥长度
+     * @param accuracy      测试精确度（数据越大表示生成的素数越可靠，建议10以上）
      * @return
      */
     public static Map<String, String> RSA_GenerateKey(int length, int accuracy){

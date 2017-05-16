@@ -62,8 +62,8 @@ public class xmlReader {
                 //初始化用户并添加
                 Soldier user = new Soldier();
                 user.setName(name);
-                user.setPuKey(new BigInteger(puKey));
-                user.setPrKey(new BigInteger(prKey));
+                user.setPuKey(puKey);
+                user.setPrKey(prKey);
                 user.setSecretLevel(secretLevel);
                 user.setRange(rangeSet);
                 soldierList.add(user);

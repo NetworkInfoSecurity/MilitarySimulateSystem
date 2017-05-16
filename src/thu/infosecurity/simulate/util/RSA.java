@@ -1,4 +1,5 @@
 package thu.infosecurity.simulate.util;
+import thu.infosecurity.simulate.util.BaseElement.BigNum;
 import thu.infosecurity.simulate.util.NumberTheory.RSABase;
 
 /**
@@ -32,7 +33,15 @@ public class RSA {
         return RSABase.decrypt(encryptText, privateKey, pn);
     }
 
-    public static String RSA_GenerateKey(int length){
+    public static String RSA_GenerateKey(int length, int accuracy){
+
+        try{
+            BigNum p = BigNum.generatePrime(length, accuracy);
+
+        }catch (Exception e){
+            System.out.println(e.toString());
+        }
+
 
         return null;
     }

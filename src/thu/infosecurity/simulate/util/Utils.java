@@ -8,7 +8,7 @@ import java.util.Random;
  */
 public class Utils {
 
-    public int generateRandom(int startNum, int endNum){
+    public static int generateRandom(int startNum, int endNum){
         Random rndSeed = new Random();
         double rndNumber = rndSeed.nextDouble();
         return (int)(startNum + rndNumber * (endNum - startNum));

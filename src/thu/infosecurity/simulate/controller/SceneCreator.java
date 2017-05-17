@@ -1,5 +1,7 @@
 package thu.infosecurity.simulate.controller;
 
+import com.sun.tools.javac.util.Pair;
+import com.sun.xml.internal.xsom.impl.scd.Iterators;
 import thu.infosecurity.simulate.model.Soldier;
 import thu.infosecurity.simulate.model.Target;
 import thu.infosecurity.simulate.util.Utils;
@@ -7,8 +9,9 @@ import thu.infosecurity.simulate.util.xmlReader;
 
 import java.awt.*;
 import java.math.BigInteger;
-import java.util.ArrayList;
+import java.util.*;
 
+import static thu.infosecurity.simulate.util.RSA.RSA_GenerateKey;
 import static thu.infosecurity.simulate.util.xmlReader.getSoldierListFromFile;
 
 /**
@@ -16,39 +19,75 @@ import static thu.infosecurity.simulate.util.xmlReader.getSoldierListFromFile;
  */
 public class SceneCreator {
 
-    public Utils utils;
+    public SceneCreator() { }
 
-    public SceneCreator() {
-        this.utils = new Utils();
+    /**
+     * 初始化模拟场景需要的伞兵信息
+     * 比如几个伞兵、伞兵的初始坐标等
+     * @param method: 0: 程序生成，1：XML文件读取
+     */
+    public void SoldierListInit(int method, int soldierNum){
+
+        /* 生成伞兵列表 */
+        ArrayList<Soldier> soldierList = new ArrayList<>();
+
+        if(method == 1){  //读取伞兵信息列表，soldierNum无用
+             /* 读取伞兵列表 */
+            xmlReader usersReader = new xmlReader();
+            soldierList = usersReader.getSoldierListFromFile();
+            //生成伞兵的ID和坐标
+            for(int i = 0; i < soldierList.size(); i++){
+                soldierList.get(i).setID(i+1);
+                soldierList.get(i).setPosition(new Point(Utils.generateRandom(0,1000), Utils.generateRandom(0,800)));
+            }
+        } else {
+            for(int i = 0; i < soldierNum; i++){
+                Soldier soldier = new Soldier();
+                //ID，姓名，坐标
+                soldier.setID(i+1);
+                soldier.setName("Soloier" + (i+1));
+                soldier.setPosition(new Point(Utils.generateRandom(0,1000), Utils.generateRandom(0,800)));
+                //公私钥信息
+                Map<String, String> key = RSA_GenerateKey(20, 10);
+                String e = key.get("e");
+                String d = key.get("d");
+                String n = key.get("n");
+                soldier.setPuKey(n + "," + e);
+                soldier.setPrKey(n + "," + d);
+                //秘钥共享信息
+                soldier.setShareKey(new Pair<Integer, Integer>(i+1, Utils.generateRandom(0,1000)));
+                //访问控制
+                soldier.setSecretLevel("S");  //暂时，测试
+                Set<String> set = new HashSet<>();
+                set.add("G");
+                soldier.setRange(set); //暂时，测试
+                //添加成员
+                soldierList.add(soldier);
+            }
+        }
+
+        //测试
+        /*System.out.println("Soldiers:");
+        for(Soldier soldier: soldierList){
+            System.out.println(soldier);
+        }*/
     }
 
     /**
-     * 初始化模拟场景需要的各个元素
-     * 比如几个伞兵、几个装备箱、伞兵装备箱的初始坐标等
+     * 初始化模拟场景需要的装备箱信息
+     * 比如几个装备箱、装备箱的初始坐标等
      */
-    public void SceneInit(int soldierNum, int targetNum){
-        /* 读取伞兵列表 */
-        xmlReader usersReader = new xmlReader();
-        ArrayList<Soldier> soldierList = usersReader.getSoldierListFromFile();
-        //生成伞兵的ID和坐标
-        for(int i = 0; i < soldierList.size(); i++){
-            soldierList.get(i).setID(i+1);
-            soldierList.get(i).setPosition(new Point(utils.generateRandom(0,1000),utils.generateRandom(0,800)));
-        }
+    public void TackleBoxListInit(int targetNum){
 
         /* 生成装备箱列表 */
         ArrayList<Target> targetList = new ArrayList<>();
         for(int i = 0; i < targetNum; i++){
-            Target tgt = new Target("TackleBox1","S","G",true,3, new BigInteger("1234"));
+            Target tgt = new Target("TackleBox1",new Point(Utils.generateRandom(0,1000), Utils.generateRandom(0,800)),"S","G",true,3, new BigInteger("1234"));
             targetList.add(tgt);
         }
 
         //测试
-       /* System.out.println("Soldiers:");
-        for(Soldier soldier: soldierList){
-            System.out.println(soldier);
-        }
-        System.out.println("TackleBoxes:");
+        /*System.out.println("TackleBoxes:");
         for(Target target: targetList){
             System.out.println(target);
         }*/
@@ -81,6 +120,7 @@ public class SceneCreator {
 
         SceneCreator scene = new SceneCreator();
         //SceneInit test
-        scene.SceneInit(5,1);
+        scene.SoldierListInit(0,5);
+        scene.TackleBoxListInit(1);
     }
 }

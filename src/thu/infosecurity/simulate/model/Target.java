@@ -1,5 +1,6 @@
 package thu.infosecurity.simulate.model;
 
+import java.awt.*;
 import java.math.BigInteger;
 import java.util.ArrayList;
 /**
@@ -7,6 +8,7 @@ import java.util.ArrayList;
  */
 public class Target {
     public String objName;                  //客体名称
+    private Point position;                 //位置
 
     private String secretLevel;             //访问控制::客体密级
     private String range;                   //访问控制::客体范畴
@@ -15,8 +17,9 @@ public class Target {
     private int shareNumber;                //秘钥共享::需要共享的人数
     private BigInteger shareKey;            //秘钥共享::秘钥
 
-    public Target(String objName, String secretLevel, String range, boolean shareFlag, int shareNumber, BigInteger shareKey) {
+    public Target(String objName, Point position, String secretLevel, String range, boolean shareFlag, int shareNumber, BigInteger shareKey) {
         this.objName = objName;
+        this.position = position;
         this.secretLevel = secretLevel;
         this.range = range;
         this.shareFlag = shareFlag;
@@ -30,6 +33,14 @@ public class Target {
 
     public void setObjName(String objName) {
         this.objName = objName;
+    }
+
+    public Point getPosition() {
+        return position;
+    }
+
+    public void setPosition(Point position) {
+        this.position = position;
     }
 
     public String getSecretLevel() {
@@ -76,11 +87,12 @@ public class Target {
     public String toString() {
         return "Target{" +
                 "objName='" + objName + '\'' +
-                "secretLevel='" + secretLevel + '\'' +
-                "range='" + range + '\'' +
-                "shareFlag='" + shareFlag + '\'' +
-                "shareNumber='" + shareNumber + '\''+
-                "shareFlag='" + shareFlag + '\'' +
+                ", position='" + position.toString() + '\'' +
+                ", secretLevel='" + secretLevel + '\'' +
+                ", range='" + range + '\'' +
+                ", shareFlag='" + shareFlag + '\'' +
+                ", shareNumber='" + shareNumber + '\''+
+                ", shareFlag='" + shareFlag + '\'' +
                 "}";
     }
 

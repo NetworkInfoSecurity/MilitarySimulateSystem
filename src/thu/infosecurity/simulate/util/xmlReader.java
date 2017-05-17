@@ -1,5 +1,6 @@
 package thu.infosecurity.simulate.util;
 
+import com.sun.tools.javac.util.Pair;
 import thu.infosecurity.simulate.model.Soldier;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -24,7 +25,11 @@ public class xmlReader {
         ArrayList<Soldier> soldierList = getSoldierListFromFile();
         for(Soldier soldier : soldierList){
             System.out.println(soldier);
+            RSA.soldierVerify(soldierList.get(1));
+
         }
+
+
     }
 
     /**
@@ -47,6 +52,12 @@ public class xmlReader {
                 String name = node.getElementsByTagName("name").item(0).getFirstChild().getNodeValue();
                 String puKey = node.getElementsByTagName("publicKey").item(0).getFirstChild().getNodeValue();
                 String prKey = node.getElementsByTagName("privateKey").item(0).getFirstChild().getNodeValue();
+                String shareKey = node.getElementsByTagName("shareKey").item(0).getFirstChild().getNodeValue();
+
+                Integer A = Integer.parseInt(shareKey.split(",")[0]);
+                Integer B = Integer.parseInt(shareKey.split(",")[1]);
+                Pair<Integer, Integer> shareKeyPair = new Pair<>(A, B);
+
                 String secretLevel = node.getElementsByTagName("secretLevel").item(0).getFirstChild().getNodeValue();
 
                 Element rangesElem = (Element) node.getElementsByTagName("ranges").item(0);
@@ -64,6 +75,7 @@ public class xmlReader {
                 user.setName(name);
                 user.setPuKey(puKey);
                 user.setPrKey(prKey);
+                user.setShareKey(shareKeyPair);
                 user.setSecretLevel(secretLevel);
                 user.setRange(rangeSet);
                 soldierList.add(user);

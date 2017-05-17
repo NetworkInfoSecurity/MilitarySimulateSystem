@@ -1,10 +1,12 @@
 package thu.infosecurity.simulate.util;
+import thu.infosecurity.simulate.model.Soldier;
 import thu.infosecurity.simulate.util.BaseElement.BigNum;
 import thu.infosecurity.simulate.util.NumberTheory.RSABase;
 import thu.infosecurity.simulate.util.NumberTheory.BigNumGCD;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Created by DaFei-PC on 2017-05-16.
@@ -33,8 +35,6 @@ public class RSA {
         String deStr = RSA_Decrypt(enStr, d, n);
         System.out.println("decrypted = " + deStr);
     }
-
-
 
 
     public static String RSA_Encrypt(String plainText, String publicKey, String pn){
@@ -69,6 +69,42 @@ public class RSA {
             System.out.println(e.toString());
         }
         return null;
+    }
+
+
+    /** 验证一个士兵是否合法*/
+    public static boolean soldierVerify(Soldier soldier){
+        System.out.println("Now, verify soldier");
+        String rndStr = randomString(5);
+
+        String n = soldier.getPuKey().split(",")[0];
+        String e = soldier.getPuKey().split(",")[1];
+        String d = soldier.getPrKey().split(",")[1];
+
+        /*按照题目要求，嘉定这里的公钥是所有人可以获取的*/
+        String enStr = RSA_Encrypt(rndStr, e, n);
+
+        /*私钥是需要验证的用户自己才有*/
+        String deStr = RSA_Decrypt(enStr, d, n);
+
+        if(deStr.equals(rndStr)) {
+            System.out.println("士兵" + soldier.getName() + "验证成功");
+            return true;
+        }
+        System.out.println("士兵" + soldier.getName() + "验证失败");
+        return false;
+    }
+
+    /** 产生一个随机的字符串, 用于士兵验证*/
+    private static String randomString(int length) {
+        String str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        Random random = new Random();
+        StringBuffer buf = new StringBuffer();
+        for (int i = 0; i < length; i++) {
+            int num = random.nextInt(62);
+            buf.append(str.charAt(num));
+        }
+        return buf.toString();
     }
 
 }

@@ -15,7 +15,74 @@ public class Target {
     private int shareNumber;                //秘钥共享::需要共享的人数
     private BigInteger shareKey;            //秘钥共享::秘钥
 
+    public Target(String objName, String secretLevel, String range, boolean shareFlag, int shareNumber, BigInteger shareKey) {
+        this.objName = objName;
+        this.secretLevel = secretLevel;
+        this.range = range;
+        this.shareFlag = shareFlag;
+        this.shareNumber = shareNumber;
+        this.shareKey = shareKey;
+    }
 
+    public String getObjName() {
+        return objName;
+    }
+
+    public void setObjName(String objName) {
+        this.objName = objName;
+    }
+
+    public String getSecretLevel() {
+        return secretLevel;
+    }
+
+    public void setSecretLevel(String secretLevel) {
+        this.secretLevel = secretLevel;
+    }
+
+    public String getRange() {
+        return range;
+    }
+
+    public void setRange(String range) {
+        this.range = range;
+    }
+
+    public boolean isShareFlag() {
+        return shareFlag;
+    }
+
+    public void setShareFlag(boolean shareFlag) {
+        this.shareFlag = shareFlag;
+    }
+
+    public int getShareNumber() {
+        return shareNumber;
+    }
+
+    public void setShareNumber(int shareNumber) {
+        this.shareNumber = shareNumber;
+    }
+
+    public BigInteger getShareKey() {
+        return shareKey;
+    }
+
+    public void setShareKey(BigInteger shareKey) {
+        this.shareKey = shareKey;
+    }
+
+    @Override
+    public String toString() {
+        return "Target{" +
+                "objName='" + objName + '\'' +
+                "secretLevel='" + secretLevel + '\'' +
+                "range='" + range + '\'' +
+                "shareFlag='" + shareFlag + '\'' +
+                "shareNumber='" + shareNumber + '\''+
+                "shareFlag='" + shareFlag + '\'' +
+                "}";
+    }
 
     //需要秘钥共享才能打开内容，比如最终的武器箱
     public boolean canOpen(ArrayList<Soldier> userList){

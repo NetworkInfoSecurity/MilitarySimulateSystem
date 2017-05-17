@@ -3,6 +3,7 @@ package thu.infosecurity.simulate.model;
 //import javafx.util.Pair;
 import com.sun.tools.javac.util.Pair;
 
+import java.awt.*;
 import java.util.Set;
 
 /**
@@ -13,11 +14,12 @@ public class Soldier {
     /*基本信息*/
     private int ID;                     //ID
     private String name;                //姓名
+    private Point position;             //坐标
     /*公私钥信息*/
     private String puKey;               //公钥
-    private String prKey;           //私钥
+    private String prKey;               //私钥
     /*秘钥共享信息*/
-    //private String shareKey;            //格式为：1,45 因此需要手动按照,讲两个数据提取出来
+    //private String shareKey;          //格式为：1,45 因此需要手动按照,讲两个数据提取出来
     private Pair<Integer, Integer> shareKey;
     /*访问控制*/
     private String secretLevel;         //采用BLP模型，分文秘密'S'，机密'C'，绝密'T'三个等级
@@ -41,6 +43,14 @@ public class Soldier {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Point getPosition() {
+        return position;
+    }
+
+    public void setPosition(Point position) {
+        this.position = position;
     }
 
     public String getPuKey() {
@@ -86,7 +96,9 @@ public class Soldier {
     @Override
     public String toString() {
         return "Soldier{" +
-                "name='" + name + '\'' +
+                "ID='" + ID + '\'' +
+                ", name='" + name + '\'' +
+                ", position='" + position.toString() + '\'' +
                 ", puKey=" + puKey +
                 ", prKey=" + prKey +
                 ", shareKey='" + shareKey.toString() + '\'' +

@@ -47,7 +47,7 @@ public class xmlReader {
                 String name = node.getElementsByTagName("name").item(0).getFirstChild().getNodeValue();
                 String puKey = node.getElementsByTagName("publicKey").item(0).getFirstChild().getNodeValue();
                 String prKey = node.getElementsByTagName("privateKey").item(0).getFirstChild().getNodeValue();
-                String secretLevel = node.getElementsByTagName("secretLeven").item(0).getFirstChild().getNodeValue();
+                String secretLevel = node.getElementsByTagName("secretLevel").item(0).getFirstChild().getNodeValue();
 
                 Element rangesElem = (Element) node.getElementsByTagName("ranges").item(0);
                 Set<String> rangeSet = new HashSet<>();

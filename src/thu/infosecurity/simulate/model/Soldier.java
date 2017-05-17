@@ -3,7 +3,6 @@ package thu.infosecurity.simulate.model;
 //import javafx.util.Pair;
 import com.sun.tools.javac.util.Pair;
 
-import java.math.BigInteger;
 import java.util.Set;
 
 /**

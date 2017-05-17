@@ -15,7 +15,7 @@ public class Soldier {
     private int ID;                     //ID
     private String name;                //姓名
     /*公私钥信息*/
-    private String puKey;           //公钥
+    private String puKey;               //公钥
     private String prKey;           //私钥
     /*秘钥共享信息*/
     //private String shareKey;            //格式为：1,45 因此需要手动按照,讲两个数据提取出来

@@ -35,12 +35,12 @@ public class Target {
     }
 
     /*辅助函数，用户访问控制*/
-    private int toLevel(String level){
+    public static int toLevel(String level){
         if(level.equals("s") || level.equals("S"))
             return 0;
-        if(level.equals("s") || level.equals("S"))
+        if(level.equals("c") || level.equals("C"))
             return 1;
-        if(level.equals("s") || level.equals("S"))
+        if(level.equals("t") || level.equals("T"))
             return 2;
 
         System.err.println("密级判断错误，请检查用户和客体密级是否越界，只能存在'S','C','T'三种密级");

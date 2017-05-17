@@ -28,8 +28,6 @@ public class xmlReader {
             RSA.soldierVerify(soldierList.get(1));
 
         }
-
-
     }
 
     /**

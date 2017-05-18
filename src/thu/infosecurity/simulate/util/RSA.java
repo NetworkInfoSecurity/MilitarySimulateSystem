@@ -9,7 +9,10 @@ import java.util.Map;
 import java.util.Random;
 
 /**
- * Created by DaFei-PC on 2017-05-16.
+ * Created by Sunlin on 2017-05-16.
+ *
+ * 功能：提供
+ * 接口：加密，解密，生成秘钥，验证士兵
  */
 public class RSA {
     public static void main(String[] args){
@@ -70,7 +73,6 @@ public class RSA {
         }
         return null;
     }
-
 
     /** 验证一个士兵是否合法*/
     public static boolean soldierVerify(Soldier soldier){

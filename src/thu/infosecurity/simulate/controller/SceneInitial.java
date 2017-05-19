@@ -74,7 +74,8 @@ public class SceneInitial {
         Target weaponBox = new Target();
         /*设置基本信息*/
         weaponBox.setObjName("weapon_box");
-        weaponBox.setPosition(new Point(Utils.generateRandom(0,895), Utils.generateRandom(0,661)));
+        weaponBox.setPosition(new Point(0, 0));
+//        weaponBox.setPosition(new Point(Utils.generateRandom(10,880), Utils.generateRandom(10,650)));
         /*箱子不需要BLP模型，只需要秘钥共享即可*/
         weaponBox.setShareFlag(true);
         weaponBox.setShareNumber(4);

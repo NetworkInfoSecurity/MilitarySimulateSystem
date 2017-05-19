@@ -8,14 +8,14 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
+    <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://C:/Program Files/Java/jdk1.8.0_91/lib/tools.jar!/" />
+          <root url="jar://C:/Program Files/Java/jdk1.8.0_121/lib/tools.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://C:/Program Files/Java/jdk1.8.0_91/lib/tools.jar!/" />
+          <root url="jar://C:/Program Files/Java/jdk1.8.0_121/lib/tools.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>

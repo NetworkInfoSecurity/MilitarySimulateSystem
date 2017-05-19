@@ -5,10 +5,12 @@ package thu.infosecurity.simulate;/**
 import java.io.IOException;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class MainApp extends Application {
 
@@ -19,6 +21,15 @@ public class MainApp extends Application {
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("MinitarySimulateSystem");
+        this.primaryStage.setResizable(false);
+
+        //在主方法中找到Stage类,实现setOnCloseRequest的回调监听，在回调的时候执行System.exit(0);这样做在退出程序的时候，子线程也一起退出了。
+        this.primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                System.exit(0);
+            }
+        });
 
         initRootLayout();
 

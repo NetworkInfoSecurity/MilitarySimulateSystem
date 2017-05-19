@@ -51,16 +51,19 @@ public class SceneInitial {
      * 比如几个伞兵、伞兵的初始坐标等
      * @param method: 0: 程序生成，1：XML文件读取
      */
-    public ArrayList<Soldier> initialSoldierList(int method, int soldierNum, Target weaponBox){
+    private ArrayList<Soldier> initialSoldierList(int method, int soldierNum, Target weaponBox){
+        ArrayList<Soldier> soldierList = new ArrayList<>();
         /*随机生成*/
         if (method == 0) {
             /*初始化一般信息*/
-            ArrayList<Soldier> soldierList = xmlReader.generateSoldierListbyRandom(soldierNum);
+            soldierList = xmlReader.generateSoldierListbyRandom(soldierNum);
             /*初始化共享秘钥*/
             SharedKey.setSharedKeyforSoldierList(soldierList, weaponBox);
+        } else {
+            /*文件读取*/
+            soldierList =  xmlReader.getSoldierListFromFile();
         }
-        /*文件读取*/
-        return xmlReader.getSoldierListFromFile();
+        return soldierList;
     }
 
     /**
@@ -71,7 +74,7 @@ public class SceneInitial {
         Target weaponBox = new Target();
         /*设置基本信息*/
         weaponBox.setObjName("weapon_box");
-        weaponBox.setPosition(new Point(Utils.generateRandom(0,1000), Utils.generateRandom(0,800)));
+        weaponBox.setPosition(new Point(Utils.generateRandom(0,895), Utils.generateRandom(0,661)));
         /*箱子不需要BLP模型，只需要秘钥共享即可*/
         weaponBox.setShareFlag(true);
         weaponBox.setShareNumber(4);
@@ -97,8 +100,27 @@ public class SceneInitial {
         return letter;
     }
 
+    public Target getWeaponBox() {
+        return weaponBox;
+    }
 
+    public void setWeaponBox(Target weaponBox) {
+        this.weaponBox = weaponBox;
+    }
 
+    public Target getLetter() {
+        return letter;
+    }
 
+    public void setLetter(Target letter) {
+        this.letter = letter;
+    }
 
+    public ArrayList<Soldier> getSoldierList() {
+        return soldierList;
+    }
+
+    public void setSoldierList(ArrayList<Soldier> soldierList) {
+        this.soldierList = soldierList;
+    }
 }

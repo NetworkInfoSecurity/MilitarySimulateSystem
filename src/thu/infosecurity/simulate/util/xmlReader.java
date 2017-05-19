@@ -98,7 +98,7 @@ public class xmlReader {
             //姓名
             soldier.setName("soldier"+(i+1));
             //坐标
-            soldier.setPosition(new Point(Utils.generateRandom(0,1000), Utils.generateRandom(0,800)));
+            soldier.setPosition(new Point(Utils.generateRandom(0,895), Utils.generateRandom(0,661)));
             //RSA公私钥
             Map<String, String> key = RSA.RSA_GenerateKey(20, 10);
             soldier.setPuKey(key.get("n") + "," + key.get("e"));
@@ -115,9 +115,11 @@ public class xmlReader {
             Set<String> rangeSet = new HashSet<>();
             rangeSet.add("S");//假定都是G
             soldier.setRange(rangeSet);
-            System.out.println(soldier);
+            //System.out.println(soldier);
+            //添加成员
+            soldierList.add(soldier);
         }
         //共享秘钥在生成所有士兵之后统一生成
-        return null;
+        return soldierList;
     }
 }

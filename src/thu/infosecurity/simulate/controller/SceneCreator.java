@@ -12,6 +12,7 @@ import java.math.BigInteger;
 import java.util.*;
 
 import static thu.infosecurity.simulate.util.RSA.RSA_GenerateKey;
+import static thu.infosecurity.simulate.util.RSA.soldierVerify;
 import static thu.infosecurity.simulate.util.xmlReader.getSoldierListFromFile;
 
 /**
@@ -26,7 +27,7 @@ public class SceneCreator {
      * 比如几个伞兵、伞兵的初始坐标等
      * @param method: 0: 程序生成，1：XML文件读取
      */
-    public void SoldierListInit(int method, int soldierNum){
+    public ArrayList<Soldier> SoldierListInit(int method, int soldierNum){
 
         /* 生成伞兵列表 */
         ArrayList<Soldier> soldierList = new ArrayList<>();
@@ -38,7 +39,7 @@ public class SceneCreator {
             //生成伞兵的ID和坐标
             for(int i = 0; i < soldierList.size(); i++){
                 soldierList.get(i).setID(i+1);
-                soldierList.get(i).setPosition(new Point(Utils.generateRandom(0,1000), Utils.generateRandom(0,800)));
+                soldierList.get(i).setPosition(new Point(Utils.generateRandom(0,895), Utils.generateRandom(0,661)));
             }
         } else {
             for(int i = 0; i < soldierNum; i++){
@@ -71,13 +72,15 @@ public class SceneCreator {
         for(Soldier soldier: soldierList){
             System.out.println(soldier);
         }*/
+
+        return soldierList;
     }
 
     /**
      * 初始化模拟场景需要的装备箱信息
      * 比如几个装备箱、装备箱的初始坐标等
      */
-    public void TackleBoxListInit(int targetNum){
+    public ArrayList<Target> TackleBoxListInit(int targetNum){
 
         /* 生成装备箱列表 */
         ArrayList<Target> targetList = new ArrayList<>();
@@ -91,6 +94,8 @@ public class SceneCreator {
         for(Target target: targetList){
             System.out.println(target);
         }*/
+
+        return targetList;
     }
 
     /**

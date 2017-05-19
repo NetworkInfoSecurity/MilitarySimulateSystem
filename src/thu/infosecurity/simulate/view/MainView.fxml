@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.paint.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.scene.chart.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="thu.infosecurity.simulate.view.MainViewController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="thu.infosecurity.simulate.view.MainViewController">
    <center>
       <SplitPane dividerPositions="0.7003081664098614" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="673.0" prefWidth="927.0">
                <children>
-                  <Group layoutX="110.0" layoutY="137.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
-                  <Circle fill="#45bc4b" layoutX="89.0" layoutY="79.0" radius="41.0" strokeType="INSIDE">
-                     <stroke>
-                        <LinearGradient endX="1.0" endY="1.0">
-                           <stops>
-                              <Stop color="BLACK" />
-                              <Stop color="WHITE" offset="1.0" />
-                           </stops>
-                        </LinearGradient>
-                     </stroke></Circle>
+                  <Group fx:id="sceneGroup" layoutX="110.0" layoutY="137.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                     <children>
+                        <Canvas fx:id="sceneCanvas" height="661.0" width="895.0" />
+                     </children></Group>
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
@@ -72,7 +72,7 @@
                                           </Label>
                                           <HBox layoutX="42.0" layoutY="217.0" prefHeight="39.0" prefWidth="278.0" spacing="10.0">
                                              <children>
-                                                <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="82.0" text="开始" />
+                                                <Button fx:id="startBtn" mnemonicParsing="false" onAction="#initialize" prefHeight="30.0" prefWidth="82.0" text="开始" />
                                                 <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="82.0" text="暂停" />
                                                 <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="82.0" text="重置" />
                                              </children>

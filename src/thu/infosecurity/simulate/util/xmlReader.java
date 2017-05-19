@@ -10,29 +10,27 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.awt.*;
+import java.util.*;
 
 /**
  * Created by forest on 2017/5/16.
+ *
  */
 public class xmlReader {
-    static String filepos = "xmlFile//userInfo.xml";
+    public static String filepos = "xmlFile//userInfo.xml";
 
     public static void main(String[] args){
-        ArrayList<Soldier> soldierList = getSoldierListFromFile();
-        for(Soldier soldier : soldierList){
-            System.out.println(soldier);
-            RSA.soldierVerify(soldierList.get(1));
-
-        }
+//        ArrayList<Soldier> soldierList = getSoldierListFromFile();
+//        for(Soldier soldier : soldierList){
+//            System.out.println(soldier);
+//            RSA.soldierVerify(soldierList.get(1));
+//        }
+        generateSoldierListbyRandom(10);
     }
 
     /**
      * 读取接口，读取所有士兵列表
-     * @return 士兵列表
      */
     public static ArrayList<Soldier> getSoldierListFromFile(){
         try{
@@ -84,5 +82,42 @@ public class xmlReader {
             e.printStackTrace();
             return null;
         }
+    }
+
+
+    /**
+     * 随机生成士兵列表
+     *
+     */
+    public static ArrayList<Soldier> generateSoldierListbyRandom(int soldierNumber){
+        ArrayList<Soldier> soldierList = new ArrayList<>();
+        for(int i = 0; i < soldierNumber; i++) {
+            Soldier soldier = new Soldier();
+            //ID
+            soldier.setID(i + 1);
+            //姓名
+            soldier.setName("soldier"+(i+1));
+            //坐标
+            soldier.setPosition(new Point(Utils.generateRandom(0,1000), Utils.generateRandom(0,800)));
+            //RSA公私钥
+            Map<String, String> key = RSA.RSA_GenerateKey(20, 10);
+            soldier.setPuKey(key.get("n") + "," + key.get("e"));
+            soldier.setPrKey(key.get("n") + "," + key.get("d"));
+
+            //shareKey
+            soldier.setShareKey(new Pair<>(0,0));
+
+            //密级
+            String[] secretLevelList = {"S", "C", "T"};
+            soldier.setSecretLevel(secretLevelList[(new Random()).nextInt(3)]);
+            //范畴集
+//            String[] rangeList = {"S", "G", "A"};
+            Set<String> rangeSet = new HashSet<>();
+            rangeSet.add("S");//假定都是G
+            soldier.setRange(rangeSet);
+            System.out.println(soldier);
+        }
+        //共享秘钥在生成所有士兵之后统一生成
+        return null;
     }
 }

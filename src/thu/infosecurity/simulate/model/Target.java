@@ -1,7 +1,8 @@
 package thu.infosecurity.simulate.model;
 
+import thu.infosecurity.simulate.util.SharedKey;
+
 import java.awt.*;
-import java.math.BigInteger;
 import java.util.ArrayList;
 /**
  * Created by forest on 2017/5/16.
@@ -15,9 +16,9 @@ public class Target {
 
     private boolean shareFlag;              //秘钥共享::是否需要多人才能打开
     private int shareNumber;                //秘钥共享::需要共享的人数
-    private BigInteger shareKey;            //秘钥共享::秘钥
+    private Integer shareKey;            //秘钥共享::秘钥
 
-    public Target(String objName, Point position, String secretLevel, String range, boolean shareFlag, int shareNumber, BigInteger shareKey) {
+    public Target(String objName, Point position, String secretLevel, String range, boolean shareFlag, int shareNumber, Integer shareKey) {
         this.objName = objName;
         this.position = position;
         this.secretLevel = secretLevel;
@@ -75,11 +76,11 @@ public class Target {
         this.shareNumber = shareNumber;
     }
 
-    public BigInteger getShareKey() {
+    public Integer getShareKey() {
         return shareKey;
     }
 
-    public void setShareKey(BigInteger shareKey) {
+    public void setShareKey(Integer shareKey) {
         this.shareKey = shareKey;
     }
 
@@ -97,11 +98,11 @@ public class Target {
     }
 
     //需要秘钥共享才能打开内容，比如最终的武器箱
-    public boolean canOpen(ArrayList<Soldier> userList){
+    public boolean canOpen(ArrayList<Soldier> soldierList){
         // TODO: 2017/5/15 需要王楠实现接口
-//        BigInteger generateKey = generateShareKey(shareNumber, userList);
-//        if(0 == shareKey.compareTo(generateKey))
-//            return true;
+        Integer generateKey = SharedKey.retrieveSharedKey(soldierList, this.shareNumber);
+        if(0 == shareKey.compareTo(generateKey))
+            return true;
         return false;
     }
 

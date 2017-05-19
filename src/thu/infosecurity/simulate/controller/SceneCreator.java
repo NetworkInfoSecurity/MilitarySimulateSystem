@@ -82,7 +82,7 @@ public class SceneCreator {
         /* 生成装备箱列表 */
         ArrayList<Target> targetList = new ArrayList<>();
         for(int i = 0; i < targetNum; i++){
-            Target tgt = new Target("TackleBox1",new Point(Utils.generateRandom(0,1000), Utils.generateRandom(0,800)),"S","G",true,3, new BigInteger("1234"));
+            Target tgt = new Target("TackleBox1",new Point(Utils.generateRandom(0,1000), Utils.generateRandom(0,800)),"S","G",true,3, new Integer("1234"));
             targetList.add(tgt);
         }
 

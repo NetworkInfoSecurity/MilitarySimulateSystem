@@ -48,7 +48,7 @@ public class SharedKey {
      * Made by Sunlin, 2017-05-10
      * Finished by WangNan, xxxx-xx-xx
      */
-    public static void setSharedKeyforSoldierList(ArrayList<Soldier> soldierList, Target targetObjerc){
+    public static void setSharedKeyforSoldierList(ArrayList<Soldier> soldierList, Target weaponBox){
         // TODO: 2017/5/19 需要王楠实现
 
 

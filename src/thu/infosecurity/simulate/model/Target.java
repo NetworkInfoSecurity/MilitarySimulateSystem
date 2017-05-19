@@ -18,6 +18,10 @@ public class Target {
     private int shareNumber;                //秘钥共享::需要共享的人数
     private Integer shareKey;            //秘钥共享::秘钥
 
+
+    public Target() {
+    }
+
     public Target(String objName, Point position, String secretLevel, String range, boolean shareFlag, int shareNumber, Integer shareKey) {
         this.objName = objName;
         this.position = position;
@@ -93,13 +97,12 @@ public class Target {
                 ", range='" + range + '\'' +
                 ", shareFlag='" + shareFlag + '\'' +
                 ", shareNumber='" + shareNumber + '\''+
-                ", shareFlag='" + shareFlag + '\'' +
+                ", shareKey='" + shareKey + '\'' +
                 "}";
     }
 
     //需要秘钥共享才能打开内容，比如最终的武器箱
     public boolean canOpen(ArrayList<Soldier> soldierList){
-        // TODO: 2017/5/15 需要王楠实现接口
         Integer generateKey = SharedKey.retrieveSharedKey(soldierList, this.shareNumber);
         if(0 == shareKey.compareTo(generateKey))
             return true;
@@ -109,7 +112,7 @@ public class Target {
 
     //利用访问控制看能否查看内容，比如地上一个信件，士兵捡到信件看可否打开
     public boolean canOpen(Soldier user){
-        if( shareFlag && toLevel(this.secretLevel) < toLevel(user.getSecretLevel()) && user.getRange().contains(range))
+        if( shareFlag && toLevel(this.secretLevel) <= toLevel(user.getSecretLevel()) && user.getRange().contains(range))
             return true;
         return false;
     }

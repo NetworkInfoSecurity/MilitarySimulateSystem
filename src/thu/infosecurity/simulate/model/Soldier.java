@@ -7,6 +7,7 @@ import java.awt.*;
 import java.util.Set;
 
 /**
+ *
  * Created by forest on 2017/5/15.
  */
 public class Soldier {

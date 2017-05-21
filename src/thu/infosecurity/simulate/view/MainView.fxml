@@ -31,15 +31,15 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
-                  <SplitPane dividerPositions="0.7413010590015129" layoutX="89.0" layoutY="192.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                  <SplitPane dividerPositions="0.6747352496217852" layoutX="5.0" layoutY="5.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                     <items>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="386.0" prefWidth="374.0">
                            <children>
-                              <TitledPane animated="false" layoutX="34.0" layoutY="31.0" text="伞兵信息显示" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                              <TitledPane animated="false" layoutX="34.0" layoutY="31.0" text="系统消息" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                                 <content>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
-                                          <TextArea fx:id="infoTextArea" editable="false" layoutX="35.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" text="伞兵ID：2&#10;级别：3&#10;当前所属队伍人数：3&#10;装备箱位置：(188, 202)" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0">
+                                          <TextArea fx:id="infoTextArea" editable="false" layoutX="35.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0">
                                              <font>
                                                 <Font size="14.0" />
                                              </font>
@@ -53,7 +53,7 @@
                               </TitledPane>
                            </children>
                         </AnchorPane>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="201.0" prefWidth="374.0">
                            <children>
                               <TitledPane animated="false" layoutX="65.0" layoutY="68.0" text="模拟信息设定" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                                 <content>
@@ -69,15 +69,27 @@
                                                 <Font size="14.0" />
                                              </font>
                                           </Label>
-                                          <HBox layoutX="42.0" layoutY="77.0" prefHeight="57.0" prefWidth="278.0" spacing="10.0">
+                                          <HBox layoutX="42.0" layoutY="111.0" prefHeight="37.0" prefWidth="278.0" spacing="10.0">
                                              <children>
                                                 <Button fx:id="landBtn" mnemonicParsing="false" onAction="#handleLandBtn" prefHeight="30.0" prefWidth="82.0" text="降落" />
                                                 <Button fx:id="startBtn" mnemonicParsing="false" onAction="#handleStartBtn" prefHeight="30.0" prefWidth="82.0" text="开始" />
                                                 <Button fx:id="resetBtn" mnemonicParsing="false" onAction="#handleResetBtn" prefHeight="30.0" prefWidth="82.0" text="重置" />
                                              </children>
                                           </HBox>
-                                          <TextField fx:id="soldierNum" layoutX="112.0" layoutY="31.0" prefHeight="25.0" prefWidth="46.0" />
+                                          <TextField fx:id="soldierNum" layoutX="112.0" layoutY="31.0" prefHeight="25.0" prefWidth="46.0" text="5" />
                                           <TextField fx:id="boxNum" editable="false" layoutX="260.0" layoutY="31.0" prefHeight="25.0" prefWidth="46.0" text="1" />
+                                          <TextField fx:id="soldierNum1" layoutX="112.0" layoutY="67.0" prefHeight="25.0" prefWidth="46.0" text="3" />
+                                          <Label layoutX="42.0" layoutY="69.0" text="开箱人数：">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField fx:id="boxNum1" editable="false" layoutX="260.0" layoutY="66.0" prefHeight="25.0" prefWidth="46.0" text="1" />
+                                          <Label layoutX="190.0" layoutY="68.0" text="作战材料：">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Label>
                                        </children>
                                     </AnchorPane>
                                 </content>

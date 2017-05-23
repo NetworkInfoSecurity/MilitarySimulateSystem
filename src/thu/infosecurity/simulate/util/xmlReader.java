@@ -120,6 +120,8 @@ public class xmlReader {
             soldierList.add(soldier);
         }
         //共享秘钥在生成所有士兵之后统一生成
+
+
         return soldierList;
     }
 }

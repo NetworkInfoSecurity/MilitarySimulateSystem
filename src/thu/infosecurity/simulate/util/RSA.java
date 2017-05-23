@@ -22,7 +22,7 @@ public class RSA {
         String plain = "dfadgewrtgsfdhgyreq tg34 r5qtyq 543 5y543 4";
 
         /*Key generation testing*/
-        Map<String, String> key = RSA_GenerateKey(20, 10);
+        Map<String, String> key = RSA_GenerateKey(3, 10);
         String e = key.get("e");
         String d = key.get("d");
         String n = key.get("n");

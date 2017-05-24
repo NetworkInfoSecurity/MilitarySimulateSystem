@@ -35,6 +35,14 @@ public class SceneInitial {
         si.initial(0, 5);
         System.out.println(si.weaponBox);
         System.out.println(si.letter);
+        for (Soldier soldier : si.soldierList) {
+            System.out.println(soldier);
+        }
+
+
+        /*测试共享秘钥是否可行*/
+        Integer key = SharedKey.retrieveSharedKey(si.soldierList, si.weaponBox.getShareNumber());
+        System.out.println("sharedKey = " + key);
 
     }
 

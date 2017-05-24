@@ -62,7 +62,7 @@ public class blindSignature {
 
 
     /**
-     * 投票，士兵列表负责投票，投票对象为n个人，每人仅可投一票
+     * 匿名投票过程，士兵列表负责投票，投票对象为n个人，每人仅可投一票
      */
     public static Integer vote(ArrayList<Soldier> soldierList, int n) {
 
@@ -169,7 +169,7 @@ public class blindSignature {
         }
         System.out.printf("编号%2d拥有票数最多，为%2d\n", maxIndex, maxNumber);
 
-        return maxIndex;
+        return maxNumber;
     }
 
     /**

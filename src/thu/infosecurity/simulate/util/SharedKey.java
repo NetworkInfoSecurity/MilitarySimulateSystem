@@ -45,7 +45,7 @@ public class SharedKey {
     public static int generateKey(){
         // TODO: 2017/5/19 需要王楠实现
         Password=((int)(1+Math.random()*FACTOR_SIZE));
-
+        System.out.println("密钥:"+Password);
         return Password;
     }
 
@@ -60,20 +60,27 @@ public class SharedKey {
         Integer pass = weaponBox.getShareKey();
         int size = soldierList.size();
         int shareNumber = weaponBox.getShareNumber();
+        //System.out.println("sharenumber1:"+weaponBox.getShareNumber());
         Integer factor1[] = new Integer[shareNumber];
         factor1 = SharedKey.setRandomFactor(pass, shareNumber);
-        double messageContent = 0;
-        for (int j = 0; j < size; j++) {
+        //Integer messageContent = 0;
+        for (int j = 0; j <size; j++) {
             Soldier soldier = soldierList.get(j);
             Integer ID = soldier.getID();
+            Integer messageContent = 0;
+          //  System.out.println("sharenumber1ID:"+soldier.getID());
             for (int i = 0; i < shareNumber; i++) {
-
+                //System.out.println("sharenumber1factor:"+factor1[i]);
                 Integer temp = factor1[i] * (int)Math.pow(ID, i);
+               // System.out.println("sharenumber1factors:"+temp);
                 messageContent = messageContent + temp;
+               // System.out.println("sharenumber1factors1:"+messageContent);
             }
             //soldier.setShareKey(Pair<ID, messageContent>);
             Pair soldierShareKey = new Pair(ID, messageContent);
             soldier.setShareKey(soldierShareKey);
+           // System.out.println("ID:"+soldier.getShareKey().fst);
+           // System.out.println("SHAREKEY:"+soldier.getShareKey().snd);
         }
 
 
@@ -93,21 +100,34 @@ public class SharedKey {
         if(size<shareNumber)
             return 0;
         size=shareNumber;
+        //System.out.println("sharenumber:"+size);
         Integer X[]=new Integer[size];
         Integer Y[]=new Integer[size];
+        //System.out.println("SHAREKEYTNUM:"+shareNumber);
        // Pair pairsingle = new Pair(ID, messageContent);
         for(int i=0;i<size;i++){
             X[i]=pairList.get(i).fst;
             Y[i]=pairList.get(i).snd;
+          //  System.out.println("IDX:"+X[i]);
+           // System.out.println("SHAREKEYT:"+Y[i]);
         }
         Integer result=0;
         for(int i=0;i<size;i++){
-            Integer temp=1;
-            for(int j=0;j<size;j++)  if(i!=j)  temp=temp*(0-X[j])/(X[i]-X[j]);
+            double temp=1;
+            for(int j=0;j<size;j++)
+                if(i!=j) {
+                    //System.out.println("IDX1:"+X[i]);
+                   // System.out.println("IDX2:"+X[j]);
+                    temp = temp * (0 - X[j]) / (X[i] - X[j]);
+                    //System.out.println("result0:"+temp);
+                }
+            //System.out.println("result1:"+temp);
             temp=temp*Y[i];
-            result+=temp;
+            //System.out.println("result2:"+temp);
+            result+=(int)temp;
+            //System.out.println("result3:"+result);
         }
-
+        System.out.println("result:"+result);
         return result;
         //return null;
     }

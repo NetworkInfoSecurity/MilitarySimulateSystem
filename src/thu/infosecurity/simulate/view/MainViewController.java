@@ -25,10 +25,7 @@ import thu.infosecurity.simulate.controller.SceneCreator;
 import thu.infosecurity.simulate.controller.SceneInitial;
 import thu.infosecurity.simulate.model.Soldier;
 import thu.infosecurity.simulate.model.Target;
-import thu.infosecurity.simulate.util.ElectronicVote;
-import thu.infosecurity.simulate.util.RSA;
-import thu.infosecurity.simulate.util.SharedKey;
-import thu.infosecurity.simulate.util.Utils;
+import thu.infosecurity.simulate.util.*;
 
 import javax.management.timer.*;
 import java.awt.*;
@@ -167,6 +164,9 @@ public class MainViewController {
         sceneGroup.getChildren().clear();  //清空之前的图像
 
         sc = new SceneInitial();
+
+        infoTextArea.clear();
+        teamInfoArea.clear();
 
         team.clear();
 //        arriveTargetSet.clear();
@@ -338,7 +338,9 @@ public class MainViewController {
                     infoTextArea.appendText("- "+"开始指挥官选举：" + "\r\n");
                     //百万富翁算法选举
                     infoTextArea.appendText("   - "+"百万富翁算法选举" + "\r\n");
-                    int leaderID = getTopLeader_Million(team);
+                    System.out.println(team.toString());
+                    int leaderID = Millionaire.getTopLeader_Million(team);
+                    System.out.println("leaderID: "+leaderID);
                     if(leaderID == -1){
                         infoTextArea.appendText("   - "+"最高军衔不止1人！" + "\r\n");
                         //进行电子投票
@@ -346,7 +348,12 @@ public class MainViewController {
                         leaderID = ElectronicVote.vote(team, (float)1);
                     }
                     //确定leader
-                    soldierLeader = team.get(leaderID);
+                    for(Soldier soldier: team){
+                        if(leaderID == soldier.getID()){
+                            soldierLeader = soldier;
+                            break;
+                        }
+                    }
                     infoTextArea.appendText("   - "+"新指挥官为" + soldierLeader.getName()+"\r\n");
                     //改变方向
                     gotoBox = true;

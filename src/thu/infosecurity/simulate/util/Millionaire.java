@@ -21,32 +21,32 @@ public class Millionaire {
         Map<String,String> map1 = new HashMap<String,String>();
         Map<String,String> map2 = new HashMap<String,String>();
         Map<String,String> map3 = new HashMap<String,String>();
-        map1 = RSA.RSA_GenerateKey(20,8);
+        map1 = RSA.RSA_GenerateKey(20,10);
         Soldier s1 = new Soldier();
         s1.setID(1);
-        String str1 = map1.get("e") + "," + map1.get("n");
-        String str2 = map1.get("d") + "," + map1.get("n");
+        String str1 = map1.get("n") + "," + map1.get("e");
+        String str2 = map1.get("n") + "," + map1.get("d");
         s1.setPuKey(str1);
         s1.setPrKey(str2);
-        s1.setSecretLevel("C");
+        s1.setSecretLevel("T");
         soldiers.add(s1);
 
-        map2 = RSA.RSA_GenerateKey(20,8);
+        map2 = RSA.RSA_GenerateKey(20,10);
         Soldier s2 = new Soldier();
         s2.setID(2);
-        String str3 = map2.get("e") + "," + map2.get("n");
-        String str4 = map2.get("d") + "," + map2.get("n");
+        String str3 = map2.get("n") + "," + map2.get("e");
+        String str4 = map2.get("n") + "," + map2.get("d");
 
         s2.setPuKey(str3);
         s2.setPrKey(str4);
-        s2.setSecretLevel("T");
+        s2.setSecretLevel("S");
         soldiers.add(s2);
 
-        map3 = RSA.RSA_GenerateKey(20,8);
+        map3 = RSA.RSA_GenerateKey(20,10);
         Soldier s3 = new Soldier();
         s3.setID(3);
-        String str5 = map3.get("e") + "," + map3.get("n");
-        String str6 = map3.get("d") + "," + map3.get("n");
+        String str5 = map3.get("n") + "," + map3.get("e");
+        String str6 = map3.get("n") + "," + map3.get("d");
 
         s3.setPuKey(str5);
         s3.setPrKey(str6);
@@ -96,6 +96,7 @@ public class Millionaire {
      * 比较士兵A和士兵B级别大小，若A>B返回true，否则返回false
      * */
     public static Boolean agreeLeader(Soldier A,Soldier B){
+
         String B_puKey = B.getPuKey();
         ArrayList<String> list_1 = new ArrayList<String>();
         ArrayList<String> list_2 = new ArrayList<String>();
@@ -117,8 +118,8 @@ public class Millionaire {
         bigNum = bigNum.add(lowerBound);//随机的大质数
 
         String[] str = puKey.split(",");
-        String part1_puKey = str[0];
-        String part2_puKey = str[1];
+        String part1_puKey = str[1];
+        String part2_puKey = str[0];
         System.out.println("part2_puKey:" + part2_puKey);
         BigInteger result = encrypt(bigNum, new BigInteger(part1_puKey), new BigInteger(part2_puKey));
         int level_num = Target.toLevel(A.getSecretLevel())+1;//等级从1开始，1、2、3
@@ -147,8 +148,8 @@ public class Millionaire {
             BigInteger temp1 = new BigInteger(i+"");
             temp1 = start.add(temp1);
             String[] str = B.getPrKey().split(",");
-            String part1_prKey = str[0];
-            String part2_prKey = str[1];
+            String part1_prKey = str[1];
+            String part2_prKey = str[0];
             BigInteger temp2 = decrypt(temp1, new BigInteger(part1_prKey), new BigInteger(part2_prKey));
             temp2 = temp2.mod(bigNum);
             System.out.println("temp2:"+temp2);

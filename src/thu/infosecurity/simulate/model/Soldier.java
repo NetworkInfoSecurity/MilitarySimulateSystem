@@ -9,6 +9,7 @@ import java.util.Set;
 /**
  *
  * Created by forest on 2017/5/15.
+ * Revised by forest on 2017/6/12
  */
 public class Soldier {
 
@@ -92,6 +93,20 @@ public class Soldier {
 
     public void setRange(Set<String> range) {
         this.range = range;
+    }
+
+    /*201706.12添加：获得军衔*/
+    public String getTitle(){
+        if (secretLevel.equals("S")) {
+            return "三级士兵";
+        }
+        if (secretLevel.equals("G")) {
+            return "二级士兵";
+        }
+        if (secretLevel.equals("A")) {
+            return "一级士兵";
+        }
+        return "列兵";
     }
 
     @Override

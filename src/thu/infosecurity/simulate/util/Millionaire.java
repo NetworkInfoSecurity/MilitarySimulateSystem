@@ -28,7 +28,7 @@ public class Millionaire {
         String str2 = map1.get("d") + "," + map1.get("n");
         s1.setPuKey(str1);
         s1.setPrKey(str2);
-        s1.setSecretLevel("T");
+        s1.setSecretLevel("C");
         soldiers.add(s1);
 
         map2 = RSA.RSA_GenerateKey(20,8);
@@ -39,7 +39,7 @@ public class Millionaire {
 
         s2.setPuKey(str3);
         s2.setPrKey(str4);
-        s2.setSecretLevel("S");
+        s2.setSecretLevel("T");
         soldiers.add(s2);
 
         map3 = RSA.RSA_GenerateKey(20,8);
@@ -50,13 +50,13 @@ public class Millionaire {
 
         s3.setPuKey(str5);
         s3.setPrKey(str6);
-        s3.setSecretLevel("S");
+        s3.setSecretLevel("T");
         soldiers.add(s3);
 
         int res = getTopLeader_Million(soldiers);
         System.out.println(res);
     }
-
+/**
     public static int getTopLeader_Million( ArrayList<Soldier> soldierList){
         Soldier top_Soldier = soldierList.get(0);
         for(int i=1;i<soldierList.size();i++){
@@ -67,6 +67,30 @@ public class Millionaire {
         }
         return top_Soldier.getID();
     }
+**/
+    public static int getTopLeader_Million( ArrayList<Soldier> soldierList){
+        Soldier top_Soldier = soldierList.get(0);
+        int count = 1; //表示现在拥有最高级别的士兵个数
+        for(int i=1;i<soldierList.size();i++){
+            Soldier temp_Soldier = soldierList.get(i);
+            if(agreeLeader(top_Soldier,temp_Soldier)){    //当返回值为true时，表明后者级别高
+                if(agreeLeader(temp_Soldier,top_Soldier)){
+                    count++;
+                }
+                else{
+                    top_Soldier = temp_Soldier;
+                    count = 1;
+                }
+            }
+        }
+        if(count > 1){
+            return -1;
+        }else
+        {
+            return top_Soldier.getID();
+        }
+    }
+
 
     /**
      * 比较士兵A和士兵B级别大小，若A>B返回true，否则返回false

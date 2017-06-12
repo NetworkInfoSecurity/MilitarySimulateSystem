@@ -24,13 +24,17 @@ import thu.infosecurity.simulate.controller.SceneCreator;
 import thu.infosecurity.simulate.controller.SceneInitial;
 import thu.infosecurity.simulate.model.Soldier;
 import thu.infosecurity.simulate.model.Target;
+import thu.infosecurity.simulate.util.ElectronicVote;
 import thu.infosecurity.simulate.util.RSA;
+import thu.infosecurity.simulate.util.SharedKey;
 import thu.infosecurity.simulate.util.Utils;
 
 import javax.management.timer.*;
 import java.awt.*;
 import java.io.IOException;
 import java.util.*;
+
+import static thu.infosecurity.simulate.util.Millionaire.getTopLeader_Million;
 
 /**
  * Created by DaFei-PC on 2017-05-16.
@@ -69,14 +73,17 @@ public class MainViewController {
 
     private static final double MIN_DISTANCE = 50.0; //表示每个士兵方圆MIN_DISTANCE像素以内表示可以进行认证对话等
 
-    private static final double STEP_LENGTH = 10.0; //表示每次上士兵移动的步长
+    private static final double STEP_LENGTH = 40.0; //表示每次上士兵移动的步长
 
-    private Set<Integer> arriveTargetSet = new HashSet<Integer>();  //表示已经到达box目的地的士兵id
+//    private Set<Integer> arriveTargetSet = new HashSet<Integer>();  //表示已经到达box目的地的士兵id
 
-    private Set<Integer> authSet = new HashSet<>(); //表示已经认证过的士兵集合
+//    private Set<Integer> authSet = new HashSet<>(); //表示已经认证过的士兵集合
 //    private Map<String, Set<Integer>> authMap = new HashMap<>(); //表示已经认证过的士兵集合,String是验证的口令，后面是用有同样口令的集合
 
+    private ArrayList<Soldier> team = new ArrayList<>();
     private Soldier soldierLeader = new Soldier();
+    private boolean gotoBox = true;
+    private int sIndex = 1;
 
     //private String plain = "We are family! oh yeah!";  //每个士兵要用于跟别人验证的口令，这个也应该是每个士兵的属性！
 
@@ -94,9 +101,11 @@ public class MainViewController {
 
         sc = new SceneInitial();
 
-        arriveTargetSet.clear();
-        authSet.clear();
-        //authMap.clear();
+        team.clear();
+
+//        arriveTargetSet.clear();
+//        authSet.clear();
+//        authMap.clear();
     }
 
     /**
@@ -105,19 +114,6 @@ public class MainViewController {
      */
     @FXML
     private void initialize() {
-
-//        // Handle Button event.
-//        startBtn.setOnAction((ActionEvent event) -> {
-//            GraphicsContext gc = sceneCanvas.getGraphicsContext2D();
-//            gc.setFill(Color.GREEN);
-//            for(Soldier soldier: sc.getSoldierList()){
-//                gc.fillOval(soldier.getPosition().getX(),soldier.getPosition().getY(),15,15);
-//            }
-//            gc.setStroke(Color.BLUE);
-//            gc.setLineWidth(5);
-//            gc.strokeRoundRect(sc.getWeaponBox().getPosition().getX(),sc.getWeaponBox().getPosition().getY(),20,20,10,10);
-//        });
-
 
         //启动线程，每隔300ms更新goup
         refresh = new Thread() {
@@ -167,9 +163,10 @@ public class MainViewController {
 
         sc = new SceneInitial();
 
-        arriveTargetSet.clear();
-        authSet.clear();
-        //authMap.clear();
+        team.clear();
+//        arriveTargetSet.clear();
+//        authSet.clear();
+//        authMap.clear();
 
     }
 
@@ -212,6 +209,10 @@ public class MainViewController {
 
                 showGroup();
 
+                //首先将第一个士兵放入team，自己就是leader
+                team.add(sc.getSoldierList().get(0));
+                soldierLeader = sc.getSoldierList().get(0);
+
             }
         }
     }
@@ -223,6 +224,95 @@ public class MainViewController {
     private void handleQuit()
     {
         System.exit(0);
+    }
+
+    /**
+     * operate method
+     */
+    private boolean soldierVerify(Soldier sA, Soldier sB){
+        boolean verifyResult = false;
+        infoTextArea.appendText(sA.getName() + "遇到" + sB.getName() + "！" + "\r\n");
+        //验证士兵，但是这样有问题，应该碰到一起再验证，函数的输入应该是两个人
+        if(RSA.soldierVerify(sA) && RSA.soldierVerify(sB)){
+            infoTextArea.appendText(sA.getName() + "和" + sB.getName() + "认证成功！" + "\r\n");
+            verifyResult = true;
+        }
+        return verifyResult;
+    }
+
+    /**
+     * 每个士兵每次向箱子走一定的距离
+     */
+    private void runOperate() {
+
+        Target targetBox = sc.getWeaponBox();
+
+        ArrayList<Soldier> soldierList = sc.getSoldierList();
+
+        //模拟操作
+        if(gotoBox){
+            //向箱子方向前进
+            //如果leader进入可验证箱子的范围，则team可以开始验证
+            if(dis(soldierLeader.getPosition(), targetBox.getPosition()) <= MIN_DISTANCE + 20) {
+                //打开box的操作，输入team，调用共享秘钥模块，获取秘钥
+                Integer key = SharedKey.retrieveSharedKey(team, targetBox.getShareNumber());
+                if (key == 0) {
+                    //表示获取秘钥失败
+                    infoTextArea.appendText("人数不足，获取秘钥失败！" + "\r\n");
+                    //验证失败就返回，去寻找下一个士兵
+                    gotoBox = false;
+                } else {
+                    System.out.println("getKey:"+key+", "+"trueKey:"+targetBox.getShareKey());
+                    //获取秘钥成功，跟真实秘钥对比
+                    if (key.equals(targetBox.getShareKey())) {
+                        //验证成功，箱子打开
+                        infoTextArea.appendText("验证成功，装备箱开启成功！" + "\r\n");
+                        isOpenBox = true; //打开设备box成功
+                        isOk = false; //停止演示
+                    }
+                }
+            } else {
+                //team向装备箱移动
+                for(int i = 0; i < team.size(); i++){
+                    Soldier soldier = team.get(i);
+                    Point point = walkOne(soldier.getPosition(), targetBox.getPosition());   //走一步
+                    soldier.setPosition(point);
+                }
+            }
+        } else {
+            //向下一个士兵前进
+            //如果leader进入到下一个士兵范围，则开始认证
+            if(dis(soldierLeader.getPosition(), soldierList.get(sIndex).getPosition()) <= MIN_DISTANCE) {
+                if(soldierVerify(soldierLeader, soldierList.get(sIndex))){
+                    //验证成功，将新成员加入团队
+                    team.add(soldierList.get(sIndex));
+                    //选举新的leader
+                    //百万富翁算法选举
+                    int leaderID = getTopLeader_Million(team);
+                    if(leaderID == -1){
+                        infoTextArea.appendText("最高军衔不止1人！" + "\r\n");
+                        //进行电子投票
+                        leaderID = ElectronicVote.vote(team, (float)1);
+                    }
+                    //确定leader
+                    soldierLeader = team.get(leaderID);
+                    //改变方向
+                    gotoBox = true;
+                    //下次检测下一个士兵
+                    sIndex++;
+                } else {
+                    //验证失败
+                    infoTextArea.appendText(soldierList.get(sIndex).getName() + "认证失败！" + "\r\n");
+                }
+            } else {
+                //team向士兵移动
+                for(int i = 0; i < team.size(); i++){
+                    Soldier soldier = team.get(i);
+                    Point point = walkOne(soldier.getPosition(), soldierList.get(sIndex).getPosition());   //走一步
+                    soldier.setPosition(point);
+                }
+            }
+        }
     }
 
     /**
@@ -258,12 +348,11 @@ public class MainViewController {
         sceneGroup.getChildren().add(vb);
 
         int index = 0;
-        for(Soldier soldier: sc.getSoldierList())
+        for(Soldier soldier: team)
         {
             Label imageLable = new Label();
-//            Image image = new Image("file:resource/image/soldier.png");
             Image image;
-            if(isOpenBox && arriveTargetSet.contains(index))
+            if(isOpenBox)
             {
                 image = new Image(this.getClass().getResourceAsStream("soldierOpen.png"));
             }
@@ -277,7 +366,7 @@ public class MainViewController {
             Label lable = new Label(String.valueOf(index + 1));
 
             HBox hb = new HBox();
-            if(isOpenBox && arriveTargetSet.contains(index))
+            if(isOpenBox)
             {
                 hb.setLayoutX((index/3) * 40.0 + 70.0);
                 hb.setLayoutY((index%3) * 30.0);
@@ -294,99 +383,26 @@ public class MainViewController {
             index ++;
         }
 
-    }
-
-    /**
-     * 每个士兵每次向箱子走一定的距离
-     */
-    private void runOperate() {
-
-        Target targetBox = sc.getWeaponBox();
-
-        ArrayList<Soldier> soldierList = sc.getSoldierList();
-
-        for(int i=0; i<soldierList.size(); i++)
+        for(int i = team.size(); i < sc.getSoldierList().size(); i++)
         {
-            Soldier soldier = soldierList.get(i);
-            if(dis(soldier.getPosition(), targetBox.getPosition()) <= MIN_DISTANCE + 20)
-            {
-                arriveTargetSet.add(i);   //到达目的地box就进入集合set中
-            }
-        }
+            Soldier soldier = sc.getSoldierList().get(i);
+            Label imageLable = new Label();
+//            Image image = new Image("file:resource/image/soldier.png");
+            Image image;
+            image = new Image(this.getClass().getResourceAsStream("soldier.png"));
 
-        //TODO 添加遍历每个士兵，周围MIN_DISTANCE距离以内表示可以进行认证操作
-        for(int i = 0; i < soldierList.size(); i++){
+            imageLable.setGraphic(new ImageView(image));
 
-            //暂时写了两个士兵之间认证的逻辑
-            Soldier sA = soldierList.get(i);
-            for(int j = i + 1; j < soldierList.size(); j++){
-                Soldier sB = soldierList.get(j);
-                if((!authSet.contains(sA.getID()) || !authSet.contains(sB.getID()))&& dis(sA.getPosition(),sB.getPosition()) <= MIN_DISTANCE){  //开始认证
-                    infoTextArea.appendText(sA.getName() + "和" + sB.getName() + "开始认证" + "\r\n");
-                    //验证士兵，但是这样有问题，应该碰到一起再验证，函数的输入应该是两个人
-                    if(RSA.soldierVerify(sA) && RSA.soldierVerify(sB)){
-                        infoTextArea.appendText(sA.getName() + "和" + sB.getName() + "认证成功" + "\r\n");
-                        authSet.add(sA.getID());
-                        authSet.add(sB.getID());
-                    }
-                }
-            }
+            Label lable = new Label(String.valueOf(i + 1));
 
-            /*for(int j = i; j < soldierList.size(); j++){
-                Soldier sB = soldierList.get(j);
-                if(dis(sA.getPosition(),sB.getPosition()) <= MIN_DISTANCE){  //开始认证
-                    try {
-                        refresh.wait();
-                        String info = sA.getName() + "和" + sB.getName() + "开始认证";
-                        infoTextArea.setText(info);
+            HBox hb = new HBox();
 
-                        //士兵A将其口令作为key创建集合，如果已经存在，则忽略
-                        if(!authSet.containsKey(plain)){
-                            authMap.put(plain, new HashSet<Integer>());
-                            authMap.get(plain).add(sA.getID());
-                        }
-                        //士兵B将自己的口令用A的公钥加密得到密文
-                        String[] puKey = sA.getPuKey().split(",");
-                        String nA = puKey[0];
-                        String eA = puKey[1];
-                        String enStr = RSA.RSA_Encrypt(plain, eA, nA);
-                        //士兵A将密文用自己的私钥解密进行认证
-                        String[] prKey = sA.getPrKey().split(",");
-                        String dA = prKey[1];
-                        String deStr = RSA.RSA_Decrypt(enStr, dA, nA);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }*/
-        }
+            hb.setLayoutX(soldier.getPosition().getX());
+            hb.setLayoutY(soldier.getPosition().getY());
 
+            hb.getChildren().addAll(lable, imageLable);
 
-
-        for(int i=0; i<soldierList.size(); i++)
-        {
-            if(!arriveTargetSet.contains(i))   //没有到达box
-            {
-                Soldier soldier = soldierList.get(i);
-
-                Point point = walkOne(soldier.getPosition(), targetBox.getPosition());   //走一步
-
-                soldier.setPosition(point);
-            }
-            else
-            {
-                System.out.print(i + ",");   //打印出到达目的地box的士兵id
-            }
-        }
-        if(!arriveTargetSet.isEmpty())
-            System.out.println();
-
-        if(arriveTargetSet.size() == sc.getSoldierList().size()) //表示士兵全部到达目的地, TODO 可能这个判断条件还要修改，开锁的条件可能是士兵数的2/3或其他
-        {
-            //TODO 添加打开设备box的验证操作,调用共享秘钥
-
-
-            isOpenBox = true; //打开设备box成功
+            sceneGroup.getChildren().add(hb);
         }
 
     }
@@ -414,8 +430,6 @@ public class MainViewController {
 
         Point p = new Point();
 
-//        int orient = Utils.generateRandom(0,1);
-
         //以下在target的八个方位进行计算
         if(a.getX() <= target.getX() && a.getY() <= target.getY())  //左上
         {
@@ -435,10 +449,6 @@ public class MainViewController {
         }
         else if(a.getX() >= target.getX() && a.getY() >= target.getY())  //右下
         {
-//            switch(orient){
-//                case 0: p.setLocation(a.getX() - horizontalDis, a.getY()); break;
-//                case 1: p.setLocation(a.getX(), a.getY() - verticalDis); break;
-//            }
             p.setLocation(a.getX() - horizontalDis, a.getY() - verticalDis);
         }
         else if(a.getX() == target.getX() && a.getY() > target.getY())  //下

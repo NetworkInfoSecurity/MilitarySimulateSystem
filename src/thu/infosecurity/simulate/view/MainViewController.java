@@ -277,31 +277,17 @@ public class MainViewController {
 
     /**operate methods**/
     /**
-     * 两个士兵相互认证
-     * @param sA
-     * @param sB
-     * @return
-     */
-    private boolean soldierVerify(Soldier sA, Soldier sB){
-        boolean verifyResult = false;
-        infoTextArea.appendText(sA.getName() + "遇到" + sB.getName() + "！" + "\r\n");
-        //验证士兵，但是这样有问题，应该碰到一起再验证，函数的输入应该是两个人
-        if(RSA.soldierVerify(sA) && RSA.soldierVerify(sB)){
-            infoTextArea.appendText(sA.getName() + "和" + sB.getName() + "认证成功！" + "\r\n");
-            verifyResult = true;
-        }
-        return verifyResult;
-    }
-
-    /**
      * 更新团队信息
      */
     private void updateTeamInfo(){
         teamInfoArea.clear();
-        teamInfoArea.appendText("当前Leader："+soldierLeader.getName()+"\r\n");
-        teamInfoArea.appendText("当前团队Member："+"\r\n");
+        teamInfoArea.appendText("当前指挥官："+"\r\n");
+        teamInfoArea.appendText("   - "+soldierLeader.getName()+", "+soldierLeader.getTitle()
+                +", 密级"+soldierLeader.getSecretLevel()+"\r\n");
+        teamInfoArea.appendText("当前团队成员："+"\r\n");
         for(Soldier soldier: team){
-            teamInfoArea.appendText("   - "+soldier.getName()+"\r\n");
+            teamInfoArea.appendText("   - "+soldier.getName()+", "+soldier.getTitle()
+                    +", 密级"+soldier.getSecretLevel()+"\r\n");
         }
     }
 
@@ -320,21 +306,16 @@ public class MainViewController {
             //如果leader进入可验证箱子的范围，则team可以开始验证
             if(dis(soldierLeader.getPosition(), targetBox.getPosition()) <= MIN_DISTANCE + 20) {
                 //打开box的操作，输入team，调用共享秘钥模块，获取秘钥
-                Integer key = SharedKey.retrieveSharedKey(team, targetBox.getShareNumber());
-                if (key == 0) {
-                    //表示获取秘钥失败
-                    infoTextArea.appendText("人数不足，获取秘钥失败！" + "\r\n");
+                if (!targetBox.canOpen(team)) {
+                    //表示获取秘钥失败，开箱失败
+                    infoTextArea.appendText("- "+"验证失败，无法开启装备箱！" + "\r\n");
                     //验证失败就返回，去寻找下一个士兵
                     gotoBox = false;
                 } else {
-                    System.out.println("getKey:"+key+", "+"trueKey:"+targetBox.getShareKey());
-                    //获取秘钥成功，跟真实秘钥对比
-                    if (key.equals(targetBox.getShareKey())) {
-                        //验证成功，箱子打开
-                        infoTextArea.appendText("验证成功，装备箱开启成功！" + "\r\n");
-                        isOpenBox = true; //打开设备box成功
-                        isOk = false; //停止演示
-                    }
+                    //获取秘钥成功，开箱成功
+                    infoTextArea.appendText("- "+"验证成功，装备箱开启成功！" + "\r\n");
+                    isOpenBox = true; //打开设备box成功
+                    isOk = false; //停止演示
                 }
             } else {
                 //team向装备箱移动
@@ -348,26 +329,37 @@ public class MainViewController {
             //向下一个士兵前进
             //如果leader进入到下一个士兵范围，则开始认证
             if(dis(soldierLeader.getPosition(), soldierList.get(sIndex).getPosition()) <= MIN_DISTANCE) {
-                if(soldierVerify(soldierLeader, soldierList.get(sIndex))){
+                infoTextArea.appendText("- 队伍遇到" + soldierList.get(sIndex).getName() + "！" + "\r\n");
+                if(RSA.soldierVerify(soldierList.get(sIndex))){
                     //验证成功，将新成员加入团队
+                    infoTextArea.appendText("- "+soldierList.get(sIndex).getName() + "认证成功，加入队伍！" + "\r\n");
                     team.add(soldierList.get(sIndex));
                     //选举新的leader
+                    infoTextArea.appendText("- "+"开始指挥官选举：" + "\r\n");
                     //百万富翁算法选举
+                    infoTextArea.appendText("   - "+"百万富翁算法选举" + "\r\n");
                     int leaderID = getTopLeader_Million(team);
                     if(leaderID == -1){
-                        infoTextArea.appendText("最高军衔不止1人！" + "\r\n");
+                        infoTextArea.appendText("   - "+"最高军衔不止1人！" + "\r\n");
                         //进行电子投票
+                        infoTextArea.appendText("   - "+"电子投票算法选举" + "\r\n");
                         leaderID = ElectronicVote.vote(team, (float)1);
                     }
                     //确定leader
                     soldierLeader = team.get(leaderID);
+                    infoTextArea.appendText("   - "+"新指挥官为" + soldierLeader.getName()+"\r\n");
                     //改变方向
                     gotoBox = true;
                     //下次检测下一个士兵
                     sIndex++;
+                    if(sIndex == soldierList.size()){
+                        //如果列表里的士兵都读取完了，终止刷新
+                        isOk = false;
+                        infoTextArea.appendText("- "+"已无其他士兵！"+"\r\n");
+                    }
                 } else {
                     //验证失败
-                    infoTextArea.appendText(soldierList.get(sIndex).getName() + "认证失败！" + "\r\n");
+                    infoTextArea.appendText("- "+soldierList.get(sIndex).getName() + "认证失败！" + "\r\n");
                 }
             } else {
                 //team向士兵移动
@@ -419,7 +411,7 @@ public class MainViewController {
         imageLetter = new Image(this.getClass().getResourceAsStream("letter.png"));
         imageLableLetter.setGraphic(new ImageView(imageLetter));
 
-        Label lableLetter = new Label("       机密信函  ");
+        Label lableLetter = new Label("         机密信函  ");
 
         VBox vbl = new VBox();
 //        System.out.println("letter:"+sc.getLetter().getPosition().getX()+","+sc.getLetter().getPosition().getY());

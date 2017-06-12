@@ -98,7 +98,7 @@ public class xmlReader {
             //姓名
             soldier.setName("soldier"+(i+1));
             //坐标
-            soldier.setPosition(new Point(Utils.generateRandom(0,880), Utils.generateRandom(0,650)));
+            soldier.setPosition(new Point(Utils.generateRandom(0,850), Utils.generateRandom(0,620)));
             //RSA公私钥
             Map<String, String> key = RSA.RSA_GenerateKey(20, 10);
             soldier.setPuKey(key.get("n") + "," + key.get("e"));

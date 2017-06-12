@@ -100,10 +100,10 @@ public class Soldier {
         if (secretLevel.equals("S")) {
             return "三级士兵";
         }
-        if (secretLevel.equals("G")) {
+        if (secretLevel.equals("C")) {
             return "二级士兵";
         }
-        if (secretLevel.equals("A")) {
+        if (secretLevel.equals("T")) {
             return "一级士兵";
         }
         return "列兵";

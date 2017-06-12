@@ -100,7 +100,7 @@ public class SceneInitial {
         Target letter = new Target();
         /*设置基本信息*/
         letter.setObjName("letter");
-        letter.setPosition(new Point(Utils.generateRandom(10,880), Utils.generateRandom(10,650)));
+        letter.setPosition(new Point(Utils.generateRandom(10,800), Utils.generateRandom(10,600)));
         /*设置访问控制信息*/
         letter.setSecretLevel("S");
         letter.setRange("G");

@@ -9,6 +9,7 @@ import javafx.scene.ParallelCamera;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -59,13 +60,18 @@ public class MainViewController {
     private Canvas sceneCanvas;
 
     @FXML
+    private TextArea teamInfoArea;
+    @FXML
     private TextArea infoTextArea;
 
     @FXML
     private TextField soldierNum;
 
     @FXML
-    private  TextField boxNum;
+    private TextField boxShareNum;
+
+    @FXML
+    private TextField boxNum;
 
     private boolean isLand = false;  //表示是否点击降落按钮
 
@@ -131,6 +137,7 @@ public class MainViewController {
                         @Override
                         public void run() {
                             if(isOk){
+                                updateTeamInfo();
                                 runOperate();
                                 showGroup();
                             }
@@ -156,8 +163,6 @@ public class MainViewController {
         isLand = false;
 
         isOpenBox = false;
-
-        soldierNum.setText("");
 
         sceneGroup.getChildren().clear();  //清空之前的图像
 
@@ -190,30 +195,74 @@ public class MainViewController {
     {
         String str = soldierNum.getText();
         boolean isInt = true;
-        for(int i=0; i<str.length(); i++)   //判断输入是否非数字
-        {
-            if(str.charAt(i) >= '0' && str.charAt(i) <= '9') {
+        if(!str.isEmpty()){
+            for(int i=0; i<str.length(); i++)   //判断输入是否非数字
+            {
+                if(str.charAt(i) >= '0' && str.charAt(i) <= '9') {
+                }
+                else {
+                    isInt = false;
+                    break;
+                }
             }
-            else {
-                isInt = false;
-                break;
+            if(isInt) {
+                int soldierNumber = Integer.parseInt(str);
+                if (soldierNumber != 0 && !isLand) {
+
+                    //读入开箱人数
+                    str = boxShareNum.getText();
+                    isInt = true;
+                    if(!str.isEmpty()){
+                        for(int i=0; i<str.length(); i++)   //判断输入是否非数字
+                        {
+                            if(str.charAt(i) >= '0' && str.charAt(i) <= '9') {
+                            }
+                            else {
+                                isInt = false;
+                                break;
+                            }
+                        }
+                        if(isInt){
+                            int shareNum = Integer.parseInt(str);
+                            if(shareNum != 0 && !isLand){
+                                isLand = true;
+
+                                sc.initial(0, soldierNumber, shareNum);
+
+                                showGroup();
+
+                                //首先将第一个士兵放入team，自己就是leader
+                                team.add(sc.getSoldierList().get(0));
+                                soldierLeader = sc.getSoldierList().get(0);
+                            }
+                        } else {
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("错误信息");
+                            alert.setHeaderText(null);
+                            alert.setContentText("请输入合法的开箱人数！");
+                            alert.showAndWait();
+                        }
+                    } else {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("错误信息");
+                        alert.setHeaderText(null);
+                        alert.setContentText("请输入开箱人数！");
+                        alert.showAndWait();
+                    }
+                }
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("错误信息");
+                alert.setHeaderText(null);
+                alert.setContentText("请输入合法的士兵数目！");
+                alert.showAndWait();
             }
-        }
-        if(isInt) {
-            int soldierNumber = Integer.parseInt(str);
-            if (soldierNumber != 0 && !str.isEmpty() && !isLand) {
-
-                isLand = true;
-
-                sc.initial(0, soldierNumber);
-
-                showGroup();
-
-                //首先将第一个士兵放入team，自己就是leader
-                team.add(sc.getSoldierList().get(0));
-                soldierLeader = sc.getSoldierList().get(0);
-
-            }
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("错误信息");
+            alert.setHeaderText(null);
+            alert.setContentText("请输入士兵数目！");
+            alert.showAndWait();
         }
     }
 
@@ -226,8 +275,12 @@ public class MainViewController {
         System.exit(0);
     }
 
+    /**operate methods**/
     /**
-     * operate method
+     * 两个士兵相互认证
+     * @param sA
+     * @param sB
+     * @return
      */
     private boolean soldierVerify(Soldier sA, Soldier sB){
         boolean verifyResult = false;
@@ -238,6 +291,18 @@ public class MainViewController {
             verifyResult = true;
         }
         return verifyResult;
+    }
+
+    /**
+     * 更新团队信息
+     */
+    private void updateTeamInfo(){
+        teamInfoArea.clear();
+        teamInfoArea.appendText("当前Leader："+soldierLeader.getName()+"\r\n");
+        teamInfoArea.appendText("当前团队Member："+"\r\n");
+        for(Soldier soldier: team){
+            teamInfoArea.appendText("   - "+soldier.getName()+"\r\n");
+        }
     }
 
     /**
@@ -323,6 +388,7 @@ public class MainViewController {
         sceneGroup.getChildren().clear();  //清空之前的图像
         sceneGroup.setAutoSizeChildren(true);
 
+        //绘制装备箱
         Label imageLableBox = new Label();
 //            Image image = new Image("file:resource/image/box.png");
         Image imageBox;
@@ -347,6 +413,23 @@ public class MainViewController {
 
         sceneGroup.getChildren().add(vb);
 
+        //绘制信件
+        Label imageLableLetter = new Label();
+        Image imageLetter;
+        imageLetter = new Image(this.getClass().getResourceAsStream("letter.png"));
+        imageLableLetter.setGraphic(new ImageView(imageLetter));
+
+        Label lableLetter = new Label("       机密信函  ");
+
+        VBox vbl = new VBox();
+//        System.out.println("letter:"+sc.getLetter().getPosition().getX()+","+sc.getLetter().getPosition().getY());
+        vbl.setLayoutX(sc.getLetter().getPosition().getX());
+        vbl.setLayoutY(sc.getLetter().getPosition().getY());
+        vbl.getChildren().addAll(imageLableLetter, lableLetter);
+
+        sceneGroup.getChildren().add(vbl);
+
+        //绘制士兵
         int index = 0;
         for(Soldier soldier: team)
         {

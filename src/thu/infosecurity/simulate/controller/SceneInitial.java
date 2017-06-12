@@ -32,7 +32,7 @@ public class SceneInitial {
         System.out.println("这里是测试初始化士兵和目标信息");
 
         SceneInitial si = new SceneInitial();
-        si.initial(0, 5);
+        si.initial(0, 5, 3);
         System.out.println(si.weaponBox);
         System.out.println(si.letter);
         for (Soldier soldier : si.soldierList) {
@@ -46,8 +46,8 @@ public class SceneInitial {
 
     }
 
-    public void initial(int method, int soldierNum){
-        weaponBox =initialWeaponBox();
+    public void initial(int method, int soldierNum, int boxShareNum){
+        weaponBox =initialWeaponBox(boxShareNum);
         letter = initialLetter();
         soldierList = initialSoldierList(method, soldierNum, weaponBox);
 
@@ -78,7 +78,7 @@ public class SceneInitial {
      * 初始化武器箱信息
      * @return
      */
-    private Target initialWeaponBox(){
+    private Target initialWeaponBox(int boxShareNum){
         Target weaponBox = new Target();
         /*设置基本信息*/
         weaponBox.setObjName("weapon_box");
@@ -86,7 +86,7 @@ public class SceneInitial {
 //        weaponBox.setPosition(new Point(Utils.generateRandom(10,880), Utils.generateRandom(10,650)));
         /*箱子不需要BLP模型，只需要秘钥共享即可*/
         weaponBox.setShareFlag(true);
-        weaponBox.setShareNumber(4);
+        weaponBox.setShareNumber(boxShareNum);
         weaponBox.setShareKey(SharedKey.generateKey());
 
         return weaponBox;
@@ -100,7 +100,7 @@ public class SceneInitial {
         Target letter = new Target();
         /*设置基本信息*/
         letter.setObjName("letter");
-        letter.setPosition(new Point(Utils.generateRandom(0,1000), Utils.generateRandom(0,800)));
+        letter.setPosition(new Point(Utils.generateRandom(10,880), Utils.generateRandom(10,650)));
         /*设置访问控制信息*/
         letter.setSecretLevel("S");
         letter.setRange("G");

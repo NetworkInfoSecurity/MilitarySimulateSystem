@@ -80,7 +80,7 @@
                                                 <Font size="14.0" />
                                              </font>
                                           </Label>
-                                          <Label layoutX="42.0" layoutY="68.0" text="装备箱数：">
+                                          <Label layoutX="42.0" layoutY="68.0" text="间谍人数：">
                                              <font>
                                                 <Font size="14.0" />
                                              </font>
@@ -93,7 +93,7 @@
                                              </children>
                                           </HBox>
                                           <TextField fx:id="soldierNum" layoutX="112.0" layoutY="31.0" prefHeight="25.0" prefWidth="46.0" text="5" />
-                                          <TextField fx:id="boxNum" disable="true" layoutX="112.0" layoutY="66.0" prefHeight="25.0" prefWidth="46.0" text="1" />
+                                          <TextField fx:id="boxNum" editable="false" layoutX="112.0" layoutY="66.0" prefHeight="25.0" prefWidth="46.0" text="1" />
                                           <TextField fx:id="boxShareNum" layoutX="260.0" layoutY="30.0" prefHeight="25.0" prefWidth="46.0" text="3" />
                                           <Label layoutX="190.0" layoutY="32.0" text="开箱人数：">
                                              <font>
@@ -101,7 +101,7 @@
                                              </font>
                                           </Label>
                                           <TextField fx:id="boxNum1" disable="true" editable="false" layoutX="260.0" layoutY="66.0" prefHeight="25.0" prefWidth="46.0" text="1" />
-                                          <Label layoutX="190.0" layoutY="68.0" text="作战材料：">
+                                          <Label layoutX="190.0" layoutY="68.0" text="装备箱数：">
                                              <font>
                                                 <Font size="14.0" />
                                              </font>

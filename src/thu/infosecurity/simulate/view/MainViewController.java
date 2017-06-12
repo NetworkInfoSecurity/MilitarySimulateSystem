@@ -440,7 +440,11 @@ public class MainViewController {
             }
             else
             {
-                image = new Image(this.getClass().getResourceAsStream("soldier.png"));
+                if(soldier.getID() == soldierLeader.getID()){
+                    image = new Image(this.getClass().getResourceAsStream("soldierLeader.png"));
+                } else {
+                    image = new Image(this.getClass().getResourceAsStream("soldier.png"));
+                }
             }
 
             imageLable.setGraphic(new ImageView(image));

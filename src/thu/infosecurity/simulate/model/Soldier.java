@@ -117,6 +117,10 @@ public class Soldier {
         this.DESKey = DESKey;
     }
 
+    public String getDESKey() {
+        return DESKey;
+    }
+
     @Override
     public String toString() {
         return "Soldier{" +

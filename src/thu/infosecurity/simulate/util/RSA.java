@@ -101,12 +101,25 @@ public class RSA {
                 return false;
             }
         } else {
+            /*add by forest: 添加了利用对称秘钥判断是否为我方兵*/
+
+
             System.out.println("士兵" + soldier.getName() + "是间谍！");
             return false;
         }
     }
 
-    /** 产生一个随机的字符串, 用于士兵验证*/
+    /*士兵A对士兵B进行认真*/
+    public static boolean newSoldierVerify(Soldier soldierA, Soldier soldierB){
+        String rndStr = randomString(5);
+        String decStr = MyDES.decrypt(MyDES.encrypt(rndStr, soldierA.getDESKey()), soldierB.getDESKey());
+        return rndStr.equals(decStr);
+
+
+    }
+
+
+        /** 产生一个随机的字符串, 用于士兵验证*/
     private static String randomString(int length) {
         String str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         Random random = new Random();

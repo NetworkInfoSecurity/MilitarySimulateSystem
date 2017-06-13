@@ -603,8 +603,10 @@ public class MainViewController {
             }
             else
             {
-                hb.setLayoutX(member.getPosition().getX());
-                hb.setLayoutY(member.getPosition().getY());
+//                hb.setLayoutX(member.getPosition().getX());
+//                hb.setLayoutY(member.getPosition().getY());
+                hb.setLayoutX(soldierLeader.getPosition().getX()+((index/3) * 42.0));
+                hb.setLayoutY(soldierLeader.getPosition().getY()+((index%3) * 32.0));
             }
             hb.getChildren().addAll(lable, imageLable);
 

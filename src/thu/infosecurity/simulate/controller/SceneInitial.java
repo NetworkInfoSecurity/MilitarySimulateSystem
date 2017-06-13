@@ -3,6 +3,7 @@ package thu.infosecurity.simulate.controller;
 import com.sun.tools.javac.util.Pair;
 import thu.infosecurity.simulate.model.Soldier;
 import thu.infosecurity.simulate.model.Target;
+import thu.infosecurity.simulate.util.MyDES;
 import thu.infosecurity.simulate.util.SharedKey;
 import thu.infosecurity.simulate.util.xmlReader;
 
@@ -63,12 +64,24 @@ public class SceneInitial {
         letter = initialLetter();
         //初始化伞兵列表
         soldierList = initialSoldierList(method, soldierNum, weaponBox);
+
+        //2017.06.13 forest 添加敌我秘钥
+        initialDESKey();
+
         //初始化己方公钥列表
         publicRsaKeyList = initialPublicRsaKeyList();
         //初始化间谍列表
         spyList = initialSpyList(spyNum, soldierNum);
 
         return ;
+    }
+
+    private void initialDESKey(){
+        String key = MyDES.generateDESkey();
+//        System.out.println("key = " + key);
+        for (Soldier soldier : soldierList) {
+            soldier.setDESKey(key);
+        }
     }
 
     /**

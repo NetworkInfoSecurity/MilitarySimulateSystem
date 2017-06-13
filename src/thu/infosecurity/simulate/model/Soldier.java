@@ -17,6 +17,10 @@ public class Soldier {
     private int ID;                     //ID
     private String name;                //姓名
     private Point position;             //坐标
+
+    /*用于区分敌人的对称秘钥*/
+    private String DESKey;              //用于区分敌我士兵的对称秘钥
+
     /*公私钥信息*/
     private String puKey;               //公钥
     private String prKey;               //私钥
@@ -109,15 +113,20 @@ public class Soldier {
         return "列兵";
     }
 
+    public void setDESKey(String DESKey) {
+        this.DESKey = DESKey;
+    }
+
     @Override
     public String toString() {
         return "Soldier{" +
-                "ID='" + ID + '\'' +
+                "ID=" + ID +
                 ", name='" + name + '\'' +
-                ", position='" + position.toString() + '\'' +
-                ", puKey=" + puKey +
-                ", prKey=" + prKey +
-                ", shareKey='" + shareKey.toString() + '\'' +
+                ", position=" + position +
+                ", DESKey='" + DESKey + '\'' +
+                ", puKey='" + puKey + '\'' +
+                ", prKey='" + prKey + '\'' +
+                ", shareKey=" + shareKey +
                 ", secretLevel='" + secretLevel + '\'' +
                 ", range=" + range +
                 '}';

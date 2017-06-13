@@ -78,7 +78,7 @@ public class RSA {
 
     /** 验证一个士兵是否合法*/
     public static boolean soldierVerify(ArrayList<String> publicKeyList, Soldier soldier){
-        System.out.println("Now, verify soldier" + soldier.getName());
+//        System.out.println("Now, verify soldier" + soldier.getName());
         String rndStr = randomString(5);
 
         //判断公钥列表中是否有该成员的公钥

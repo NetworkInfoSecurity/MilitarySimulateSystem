@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static thu.infosecurity.simulate.util.RSA.RSA_GenerateKey;
+import static thu.infosecurity.simulate.util.RSA.soldierVerify;
 
 /**
  * 初始化士兵和目标信息，初始化过程
@@ -36,7 +37,7 @@ public class SceneInitial {
         System.out.println("这里是测试初始化士兵和目标信息");
 
         SceneInitial si = new SceneInitial();
-        si.initial(0, 5, 3, 1);
+        si.initial(0, 7, 3, 1);
         System.out.println(si.weaponBox);
         System.out.println(si.letter);
         for (Soldier soldier : si.soldierList) {
@@ -44,9 +45,15 @@ public class SceneInitial {
         }
 
         /*测试共享秘钥是否可行*/
-        Integer key = SharedKey.retrieveSharedKey(si.soldierList, si.weaponBox.getShareNumber());
-        System.out.println("sharedKey = " + key);
-
+        ArrayList<Soldier> team = new ArrayList<>();
+        for(int i = 0; i < si.soldierList.size(); i++){
+            System.out.println("teamNum: "+(i+1));
+            team.add(si.soldierList.get(i));
+            Integer key = SharedKey.retrieveSharedKey(team, si.weaponBox.getShareNumber());
+            System.out.println("sharedKey = " + key + ", " + "trueKey = " + si.getWeaponBox().getShareKey()
+                    +", " + si.getWeaponBox().canOpen(team));
+            ;
+        }
     }
 
     public void initial(int method, int soldierNum, int boxShareNum, int spyNum){

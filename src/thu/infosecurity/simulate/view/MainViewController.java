@@ -357,6 +357,22 @@ public class MainViewController {
     }
 
     /**
+     * 从伞兵列表中移除所有间谍
+     */
+    private void removeSpies(){
+        //首先将间谍筛选出来
+        Iterator<Soldier> soldierIterator = soldierList.iterator();
+        while(soldierIterator.hasNext()){
+            Soldier soldier = soldierIterator.next();
+            if(!RSA.soldierVerify(sc.getPublicRsaKeyList(), soldier)){
+                infoTextArea.appendText("- "+soldierList.get(0).getName() + "是间谍！认证失败！" + "\r\n");
+                spies.add(soldier);
+                soldierIterator.remove();
+            }
+        }
+    }
+
+    /**
      * 每个士兵每次向箱子走一定的距离
      */
     private void runOperate() {
@@ -366,16 +382,10 @@ public class MainViewController {
         //开箱后没有到达箱子的士兵继续到达箱子
         if(isOpenBox)
         {
-            //首先将间谍筛选出来
-            for(Soldier soldier: soldierList){
-                if(!RSA.soldierVerify(sc.getPublicRsaKeyList(), soldier)){
-                    infoTextArea.appendText("- "+soldierList.get(0).getName() + "是间谍！认证失败！" + "\r\n");
-                    spies.add(soldier);
-                    soldierList.remove(soldier);
-                }
-            }
             if(!soldierList.isEmpty()) {
-                for (Soldier sd : soldierList) {
+                Iterator<Soldier> soldierIterator = soldierList.iterator();
+                while (soldierIterator.hasNext()) {
+                    Soldier sd = soldierIterator.next();
                     //如果进入leader范围，则开始认证
                     if(dis(soldierLeader.getPosition(), sd.getPosition()) <= MIN_DISTANCE) {
                         infoTextArea.appendText("- " + sd.getName() + "找到队伍！" + "\r\n");
@@ -383,12 +393,13 @@ public class MainViewController {
                             //验证成功，将新成员加入团队
                             infoTextArea.appendText("- "+sd.getName() + "认证成功，加入队伍！" + "\r\n");
                             team.add(sd);
-                            soldierList.remove(sd);
+                            //soldierList.remove(sd);
+                            soldierIterator.remove();
                             //选举新的leader
                             infoTextArea.appendText("- "+"开始指挥官选举：" + "\r\n");
                             //百万富翁算法选举
                             infoTextArea.appendText("   - "+"百万富翁：");
-                            System.out.println(team.toString());
+//                            System.out.println(team.toString());
                             int leaderID = Millionaire.getTopLeader_Million(team);
                             System.out.println("leaderID: "+leaderID);
                             if(leaderID == -1){
@@ -410,7 +421,8 @@ public class MainViewController {
                             infoTextArea.appendText("- "+sd.getName() + "是间谍！认证失败！" + "\r\n");
                             //确认间谍
                             spies.add(sd);
-                            soldierList.remove(sd);
+                            //soldierList.remove(sd);
+                            soldierIterator.remove();
                         }
                     }
                     else
@@ -443,6 +455,8 @@ public class MainViewController {
                     infoTextArea.appendText("- "+"验证成功，装备箱开启成功！" + "\r\n");
                     isOpenBox = true; //打开设备box成功
                     //isOk = false; //停止演示
+                    //开箱成功后当即把所有间谍移除
+                    removeSpies();
                 }
             } else {
                 //team向装备箱移动
@@ -471,7 +485,7 @@ public class MainViewController {
                         infoTextArea.appendText("- "+"开始指挥官选举：" + "\r\n");
                         //百万富翁算法选举
                         infoTextArea.appendText("   - "+"百万富翁：");
-                        System.out.println(team.toString());
+//                        System.out.println(team.toString());
                         int leaderID = Millionaire.getTopLeader_Million(team);
                         System.out.println("leaderID: "+leaderID);
                         if(leaderID == -1){

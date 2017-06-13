@@ -104,6 +104,7 @@ public class Target {
     //需要秘钥共享才能打开内容，比如最终的武器箱
     public boolean canOpen(ArrayList<Soldier> soldierList){
         Integer generateKey = SharedKey.retrieveSharedKey(soldierList, this.shareNumber);
+        System.out.println("calcKey: "+generateKey+", "+"trueKey: "+shareKey);
         if(0 == shareKey.compareTo(generateKey))
             return true;
         return false;

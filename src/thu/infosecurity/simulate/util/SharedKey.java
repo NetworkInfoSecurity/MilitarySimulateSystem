@@ -127,7 +127,7 @@ public class SharedKey {
             result+=(int)temp;
             //System.out.println("result3:"+result);
         }
-        System.out.println("result:"+result);
+//        System.out.println("result:"+result);
         return result;
         //return null;
     }

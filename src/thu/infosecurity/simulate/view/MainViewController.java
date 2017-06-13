@@ -161,6 +161,8 @@ public class MainViewController {
 
         isOpenBox = false;
 
+        gotoBox = true;
+
         sceneGroup.getChildren().clear();  //清空之前的图像
 
         sc = new SceneInitial();
@@ -169,6 +171,8 @@ public class MainViewController {
         teamInfoArea.clear();
 
         team.clear();
+
+        sIndex = 1;
 //        arriveTargetSet.clear();
 //        authSet.clear();
 //        authMap.clear();
@@ -300,6 +304,69 @@ public class MainViewController {
 
         ArrayList<Soldier> soldierList = sc.getSoldierList();
 
+        //开箱后没有到达箱子的士兵继续到达箱子
+        if(isOpenBox)
+        {
+            if(team.size() < soldierList.size()) {
+                for (Soldier sd : soldierList) {
+                    boolean bl = false;
+                    for (Soldier t : team) {
+                        if (sd.getID() == t.getID()) {
+                            bl = true;
+                            break;
+                        }
+                    }
+                    if (!bl) {
+
+                        //如果进入leader范围，则开始认证
+                        if(dis(soldierLeader.getPosition(), sd.getPosition()) <= MIN_DISTANCE) {
+                            infoTextArea.appendText("- 队伍遇到" + sd.getName() + "！" + "\r\n");
+                            if(RSA.soldierVerify(sd)){
+                                //验证成功，将新成员加入团队
+                                infoTextArea.appendText("- "+sd.getName() + "认证成功，加入队伍！" + "\r\n");
+                                team.add(sd);
+                                //选举新的leader
+                                infoTextArea.appendText("- "+"开始指挥官选举：" + "\r\n");
+                                //百万富翁算法选举
+                                infoTextArea.appendText("   - "+"百万富翁算法选举" + "\r\n");
+                                System.out.println(team.toString());
+                                int leaderID = Millionaire.getTopLeader_Million(team);
+                                System.out.println("leaderID: "+leaderID);
+                                if(leaderID == -1){
+                                    infoTextArea.appendText("   - "+"最高军衔不止1人！" + "\r\n");
+                                    //进行电子投票
+                                    infoTextArea.appendText("   - "+"电子投票算法选举" + "\r\n");
+                                    leaderID = ElectronicVote.vote(team, (float)1);
+                                }
+                                //确定leader
+                                for(Soldier soldier: team){
+                                    if(leaderID == soldier.getID()){
+                                        soldierLeader = soldier;
+                                        break;
+                                    }
+                                }
+                                infoTextArea.appendText("   - "+"新指挥官为" + soldierLeader.getName()+"\r\n");
+                            } else {
+                                //验证失败
+                                infoTextArea.appendText("- "+sd.getName() + "认证失败！" + "\r\n");
+                            }
+                        }
+                        else
+                        {
+                            Point point = walkOne(sd.getPosition(), soldierLeader.getPosition());   //走一步
+                            sd.setPosition(point);
+                        }
+
+                    }
+                }
+            }
+            else
+            {
+                isOk = false; //停止演示
+            }
+            return;
+        }
+
         //模拟操作
         if(gotoBox){
             //向箱子方向前进
@@ -315,7 +382,7 @@ public class MainViewController {
                     //获取秘钥成功，开箱成功
                     infoTextArea.appendText("- "+"验证成功，装备箱开启成功！" + "\r\n");
                     isOpenBox = true; //打开设备box成功
-                    isOk = false; //停止演示
+                    //isOk = false; //停止演示
                 }
             } else {
                 //team向装备箱移动

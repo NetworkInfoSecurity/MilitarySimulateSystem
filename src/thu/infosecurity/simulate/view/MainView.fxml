@@ -88,7 +88,7 @@
                                           <HBox layoutX="42.0" layoutY="111.0" prefHeight="37.0" prefWidth="278.0" spacing="10.0">
                                              <children>
                                                 <Button fx:id="landBtn" mnemonicParsing="false" onAction="#handleLandBtn" prefHeight="30.0" prefWidth="82.0" text="降落" />
-                                                <Button fx:id="startBtn" mnemonicParsing="false" onAction="#handleStartBtn" prefHeight="30.0" prefWidth="82.0" text="开始" />
+                                                <Button fx:id="startBtn" mnemonicParsing="false" onAction="#handleStartBtn" prefHeight="30.0" prefWidth="82.0" text="自动运行" />
                                                 <Button fx:id="resetBtn" mnemonicParsing="false" onAction="#handleResetBtn" prefHeight="30.0" prefWidth="82.0" text="重置" />
                                              </children>
                                           </HBox>

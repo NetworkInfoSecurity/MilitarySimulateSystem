@@ -18,7 +18,7 @@ public class SharedKey {
 
     }
     private static Integer Password = 0;
-    static int FACTOR_SIZE = 1000;
+    static int FACTOR_SIZE = 100;
     static String ERRORINFO="对不起，开启人数少于规定人数";
     //private static double factor[]=new double[MIN_NESSARY];
 
@@ -111,7 +111,7 @@ public class SharedKey {
           //  System.out.println("IDX:"+X[i]);
            // System.out.println("SHAREKEYT:"+Y[i]);
         }
-        Integer result=0;
+        double result1=0;
         for(int i=0;i<size;i++){
             double temp=1;
             for(int j=0;j<size;j++)
@@ -124,10 +124,11 @@ public class SharedKey {
             //System.out.println("result1:"+temp);
             temp=temp*Y[i];
             //System.out.println("result2:"+temp);
-            result+=(int)temp;
+            result1+=temp;
             //System.out.println("result3:"+result);
         }
 //        System.out.println("result:"+result);
+        Integer result = (int)result1;
         return result;
         //return null;
     }

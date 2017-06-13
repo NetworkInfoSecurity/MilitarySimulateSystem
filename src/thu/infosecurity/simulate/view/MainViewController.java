@@ -325,7 +325,7 @@ public class MainViewController {
         //首先将第一个士兵放入team，自己就是leader
         do{
             Soldier soldier = soldierList.get(0);
-            if(RSA.soldierVerify(sc.getPublicRsaKeyList(),soldier)){
+            if(RSA.soldierVerify(sc.getPublicRsaKeyList(), soldier, soldierLeader.getDESKey())){
                 //验证成功，则将其加入团队，结束本函数
                 infoTextArea.appendText("- "+soldierList.get(0).getName() + "认证成功，加入队伍，成为指挥官！" + "\r\n");
                 team.add(soldierList.get(0));
@@ -364,7 +364,7 @@ public class MainViewController {
         Iterator<Soldier> soldierIterator = soldierList.iterator();
         while(soldierIterator.hasNext()){
             Soldier soldier = soldierIterator.next();
-            if(!RSA.soldierVerify(sc.getPublicRsaKeyList(), soldier)){
+            if(!RSA.soldierVerify(sc.getPublicRsaKeyList(), soldier, soldierLeader.getDESKey())){
                 infoTextArea.appendText("- "+soldierList.get(0).getName() + "是间谍！认证失败！" + "\r\n");
                 spies.add(soldier);
                 soldierIterator.remove();
@@ -389,7 +389,7 @@ public class MainViewController {
                     //如果进入leader范围，则开始认证
                     if(dis(soldierLeader.getPosition(), sd.getPosition()) <= MIN_DISTANCE) {
                         infoTextArea.appendText("- " + sd.getName() + "找到队伍！" + "\r\n");
-                        if(RSA.soldierVerify(sc.getPublicRsaKeyList(), sd)){
+                        if(RSA.soldierVerify(sc.getPublicRsaKeyList(), sd, soldierLeader.getDESKey())){
                             //验证成功，将新成员加入团队
                             infoTextArea.appendText("- "+sd.getName() + "认证成功，加入队伍！" + "\r\n");
                             team.add(sd);
@@ -400,20 +400,19 @@ public class MainViewController {
                             //百万富翁算法选举
                             infoTextArea.appendText("   - "+"百万富翁：");
 //                            System.out.println(team.toString());
-                            int leaderID = Millionaire.getTopLeader_Million(team);
-                            System.out.println("leaderID: "+leaderID);
-                            if(leaderID == -1){
+                            ArrayList<Soldier> leaders = Millionaire.getTopLeader_Million(team);
+//                            System.out.println("leaderID: "+leaderID);
+                            if(leaders.size() > 1){
                                 infoTextArea.appendText("最高军衔不止1人！" + "\r\n");
                                 //进行电子投票
                                 infoTextArea.appendText("   - "+"电子投票：");
-                                leaderID = ElectronicVote.vote(team, (float)1);
-                            }
-                            //确定leader
-                            for(Soldier soldier: team){
-                                if(leaderID == soldier.getID()){
-                                    soldierLeader = soldier;
-                                    break;
-                                }
+                                //返回最终leader在leaders列表里面的索引
+                                int tempIndex = blindSignature.vote(team, leaders.size());
+                                //确定leader
+                                soldierLeader = leaders.get(tempIndex-1);
+                            } else {
+                                //确定leader
+                                soldierLeader = leaders.get(0);
                             }
                             infoTextArea.appendText("新指挥官为" + soldierLeader.getName()+"\r\n");
                         } else {
@@ -476,7 +475,7 @@ public class MainViewController {
                 //如果leader进入到下一个士兵范围，则开始认证
                 if(dis(soldierLeader.getPosition(), soldierList.get(0).getPosition()) <= MIN_DISTANCE) {
                     infoTextArea.appendText("- 队伍遇到" + soldierList.get(0).getName() + "！" + "\r\n");
-                    if(RSA.soldierVerify(sc.getPublicRsaKeyList(), soldierList.get(0))){
+                    if(RSA.soldierVerify(sc.getPublicRsaKeyList(), soldierList.get(0), soldierLeader.getDESKey())){
                         //验证成功，将新成员加入团队
                         infoTextArea.appendText("- "+soldierList.get(0).getName() + "认证成功，加入队伍！" + "\r\n");
                         team.add(soldierList.get(0));
@@ -486,20 +485,19 @@ public class MainViewController {
                         //百万富翁算法选举
                         infoTextArea.appendText("   - "+"百万富翁：");
 //                        System.out.println(team.toString());
-                        int leaderID = Millionaire.getTopLeader_Million(team);
-                        System.out.println("leaderID: "+leaderID);
-                        if(leaderID == -1){
+                        ArrayList<Soldier> leaders = Millionaire.getTopLeader_Million(team);
+//                        System.out.println("leaderID: "+leaderID);
+                        if(leaders.size() > 1){
                             infoTextArea.appendText("最高军衔不止1人！" + "\r\n");
                             //进行电子投票
                             infoTextArea.appendText("   - "+"电子投票：");
-                            leaderID = ElectronicVote.vote(team, (float)1);
-                        }
-                        //确定leader
-                        for(Soldier soldier: team){
-                            if(leaderID == soldier.getID()){
-                                soldierLeader = soldier;
-                                break;
-                            }
+                            //返回最终leader在leaders列表里面的索引
+                            int tempIndex = blindSignature.vote(team, leaders.size());
+                            //确定leader
+                            soldierLeader = leaders.get(tempIndex-1);
+                        } else {
+                            //确定leader
+                            soldierLeader = leaders.get(0);
                         }
                         infoTextArea.appendText("新指挥官为" + soldierLeader.getName()+"\r\n");
                         //改变方向

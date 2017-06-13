@@ -18,7 +18,6 @@ public class Target {
     private int shareNumber;                //秘钥共享::需要共享的人数
     private Integer shareKey;            //秘钥共享::秘钥
 
-
     public Target() {
     }
 
@@ -116,6 +115,15 @@ public class Target {
         if( shareFlag && toLevel(this.secretLevel) <= toLevel(user.getSecretLevel()) && user.getRange().contains(range))
             return true;
         return false;
+    }
+
+    /**
+     * 机密信函的返回内容
+     * @param targetBox
+     * @return
+     */
+    private String getMessages(Target targetBox){
+        return "剩余队员注意！装备箱位置在（"+targetBox.getPosition().getX()+","+targetBox.getPosition().getY()+")！";
     }
 
     /*辅助函数，用户访问控制*/

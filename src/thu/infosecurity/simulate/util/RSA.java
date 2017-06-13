@@ -76,8 +76,14 @@ public class RSA {
         return null;
     }
 
-    /** 验证一个士兵是否合法*/
-    public static boolean soldierVerify(ArrayList<String> publicKeyList, Soldier soldier){
+    /**
+     * 验证一个士兵是否合法
+     * @param publicKeyList
+     * @param soldier
+     * @param DESKey 从已经验证的团队中任取一人的DESKey
+     * @return
+     */
+    public static boolean soldierVerify(ArrayList<String> publicKeyList, Soldier soldier, String DESKey){
 //        System.out.println("Now, verify soldier" + soldier.getName());
         String rndStr = randomString(5);
 
@@ -97,25 +103,29 @@ public class RSA {
                 System.out.println("士兵" + soldier.getName() + "验证成功！");
                 return true;
             } else {
+
                 System.out.println("士兵" + soldier.getName() + "验证失败！");
                 return false;
             }
         } else {
             /*add by forest: 添加了利用对称秘钥判断是否为我方兵*/
-
-
-            System.out.println("士兵" + soldier.getName() + "是间谍！");
-            return false;
+            if(newSoldierVerify(DESKey, soldier)){
+                System.out.println("士兵" + soldier.getName() + "二次验证成功！");
+                return true;
+            } else {
+                System.out.println("士兵" + soldier.getName() + "是间谍！");
+                return false;
+            }
         }
     }
 
     /*士兵A对士兵B进行认真*/
-    public static boolean newSoldierVerify(Soldier soldierA, Soldier soldierB){
+    public static boolean newSoldierVerify(String DESKey, Soldier soldierB){
         String rndStr = randomString(5);
-        String decStr = MyDES.decrypt(MyDES.encrypt(rndStr, soldierA.getDESKey()), soldierB.getDESKey());
+        if(soldierB.getDESKey() == null)
+            return false;
+        String decStr = MyDES.decrypt(MyDES.encrypt(rndStr, DESKey), soldierB.getDESKey());
         return rndStr.equals(decStr);
-
-
     }
 
 

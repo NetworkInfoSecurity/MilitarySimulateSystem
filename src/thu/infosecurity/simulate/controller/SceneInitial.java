@@ -73,6 +73,12 @@ public class SceneInitial {
         //初始化间谍列表
         spyList = initialSpyList(spyNum, soldierNum);
 
+        //将所有士兵的信息打印出来帮助调试
+        System.out.println("Soliders");
+        System.out.println(soldierList.toString());
+        System.out.println("Spies");
+        System.out.println(spyList.toString());
+
         return ;
     }
 

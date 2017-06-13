@@ -169,7 +169,8 @@ public class blindSignature {
         }
         System.out.printf("编号%2d拥有票数最多，为%2d\n", maxIndex, maxNumber);
 
-        return maxNumber;
+//        return maxNumber;
+        return maxIndex;
     }
 
     /**

@@ -92,8 +92,8 @@
                                                 <Button fx:id="resetBtn" mnemonicParsing="false" onAction="#handleResetBtn" prefHeight="30.0" prefWidth="82.0" text="重置" />
                                              </children>
                                           </HBox>
-                                          <TextField fx:id="soldierNum" layoutX="112.0" layoutY="31.0" prefHeight="25.0" prefWidth="46.0" text="5" />
-                                          <TextField fx:id="boxNum" editable="false" layoutX="112.0" layoutY="66.0" prefHeight="25.0" prefWidth="46.0" text="1" />
+                                          <TextField fx:id="soldierNum" layoutX="112.0" layoutY="31.0" prefHeight="25.0" prefWidth="46.0" text="7" />
+                                          <TextField fx:id="spyNum" layoutX="112.0" layoutY="66.0" prefHeight="25.0" prefWidth="46.0" text="3" />
                                           <TextField fx:id="boxShareNum" layoutX="260.0" layoutY="30.0" prefHeight="25.0" prefWidth="46.0" text="3" />
                                           <Label layoutX="190.0" layoutY="32.0" text="开箱人数：">
                                              <font>

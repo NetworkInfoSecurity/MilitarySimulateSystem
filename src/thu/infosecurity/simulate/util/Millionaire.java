@@ -152,7 +152,7 @@ public class Millionaire {
             String part2_prKey = str[0];
             BigInteger temp2 = decrypt(temp1, new BigInteger(part1_prKey), new BigInteger(part2_prKey));
             temp2 = temp2.mod(bigNum);
-            System.out.println("temp2:"+temp2);
+//            System.out.println("temp2:"+temp2);
 
             if( i > 1 + Target.toLevel(B.getSecretLevel()) ){  //把等级值加1
                 temp2 = temp2.add(new BigInteger("1"));

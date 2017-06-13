@@ -1,9 +1,11 @@
 package thu.infosecurity.simulate.util;
+import thu.infosecurity.simulate.controller.SceneControl;
 import thu.infosecurity.simulate.model.Soldier;
 import thu.infosecurity.simulate.util.BaseElement.BigNum;
 import thu.infosecurity.simulate.util.NumberTheory.RSABase;
 import thu.infosecurity.simulate.util.NumberTheory.BigNumGCD;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -75,26 +77,33 @@ public class RSA {
     }
 
     /** 验证一个士兵是否合法*/
-    public static boolean soldierVerify(Soldier soldier){
-        System.out.println("Now, verify soldier");
+    public static boolean soldierVerify(ArrayList<String> publicKeyList, Soldier soldier){
+        System.out.println("Now, verify soldier" + soldier.getName());
         String rndStr = randomString(5);
 
-        String n = soldier.getPuKey().split(",")[0];
-        String e = soldier.getPuKey().split(",")[1];
-        String d = soldier.getPrKey().split(",")[1];
+        //判断公钥列表中是否有该成员的公钥
+        if(SceneControl.findPublicKey(publicKeyList, soldier)){
+            String n = soldier.getPuKey().split(",")[0];
+            String e = soldier.getPuKey().split(",")[1];
+            String d = soldier.getPrKey().split(",")[1];
 
-        /*按照题目要求，嘉定这里的公钥是所有人可以获取的*/
-        String enStr = RSA_Encrypt(rndStr, e, n);
+            /*按照题目要求，假定这里的公钥是所有人可以获取的*/
+            String enStr = RSA_Encrypt(rndStr, e, n);
 
-        /*私钥是需要验证的用户自己才有*/
-        String deStr = RSA_Decrypt(enStr, d, n);
+            /*私钥是需要验证的用户自己才有*/
+            String deStr = RSA_Decrypt(enStr, d, n);
 
-        if(deStr.equals(rndStr)) {
-            System.out.println("士兵" + soldier.getName() + "验证成功");
-            return true;
+            if(deStr.equals(rndStr)) {
+                System.out.println("士兵" + soldier.getName() + "验证成功！");
+                return true;
+            } else {
+                System.out.println("士兵" + soldier.getName() + "验证失败！");
+                return false;
+            }
+        } else {
+            System.out.println("士兵" + soldier.getName() + "是间谍！");
+            return false;
         }
-        System.out.println("士兵" + soldier.getName() + "验证失败");
-        return false;
     }
 
     /** 产生一个随机的字符串, 用于士兵验证*/

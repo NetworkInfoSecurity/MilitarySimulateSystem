@@ -1,6 +1,7 @@
 package thu.infosecurity.simulate.util;
 
 import com.sun.tools.javac.util.Pair;
+import thu.infosecurity.simulate.controller.SceneControl;
 import thu.infosecurity.simulate.model.Soldier;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -26,7 +27,7 @@ public class xmlReader {
 //            System.out.println(soldier);
 //            RSA.soldierVerify(soldierList.get(1));
 //        }
-        generateSoldierListbyRandom(10);
+        generateSoldierListbyRandom(10, 0);
     }
 
     /**
@@ -86,19 +87,20 @@ public class xmlReader {
 
 
     /**
+     *
      * 随机生成士兵列表
      *
      */
-    public static ArrayList<Soldier> generateSoldierListbyRandom(int soldierNumber){
+    public static ArrayList<Soldier> generateSoldierListbyRandom(int soldierNumber, int startID){
         ArrayList<Soldier> soldierList = new ArrayList<>();
-        for(int i = 0; i < soldierNumber; i++) {
+        for(int i = startID; i < startID + soldierNumber; i++) {
             Soldier soldier = new Soldier();
             //ID
             soldier.setID(i + 1);
             //姓名
             soldier.setName("soldier"+(i+1));
             //坐标
-            soldier.setPosition(new Point(Utils.generateRandom(0,850), Utils.generateRandom(0,620)));
+            soldier.setPosition(new Point(SceneControl.generateRandom(0,850), SceneControl.generateRandom(0,620)));
             //RSA公私钥
             Map<String, String> key = RSA.RSA_GenerateKey(20, 10);
             soldier.setPuKey(key.get("n") + "," + key.get("e"));

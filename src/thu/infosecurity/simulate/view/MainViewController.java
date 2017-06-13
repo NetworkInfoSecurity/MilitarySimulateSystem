@@ -1,14 +1,9 @@
 package thu.infosecurity.simulate.view;
 
-import com.sun.tools.corba.se.idl.Util;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
-import javafx.scene.ParallelCamera;
-import javafx.scene.PerspectiveCamera;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -18,21 +13,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.PointLight;
-import javafx.scene.shape.Circle;
-import thu.infosecurity.simulate.controller.SceneCreator;
 import thu.infosecurity.simulate.controller.SceneInitial;
 import thu.infosecurity.simulate.model.Soldier;
 import thu.infosecurity.simulate.model.Target;
 import thu.infosecurity.simulate.util.*;
 
-import javax.management.timer.*;
 import java.awt.*;
-import java.io.IOException;
 import java.util.*;
-
-import static thu.infosecurity.simulate.util.Millionaire.getTopLeader_Million;
 
 /**
  * Created by DaFei-PC on 2017-05-16.
@@ -63,9 +50,10 @@ public class MainViewController {
 
     @FXML
     private TextField soldierNum;
-
     @FXML
     private TextField boxShareNum;
+    @FXML
+    private TextField spyNum;
 
     @FXML
     private TextField boxNum;
@@ -83,10 +71,12 @@ public class MainViewController {
 //    private Set<Integer> authSet = new HashSet<>(); //表示已经认证过的士兵集合
 //    private Map<String, Set<Integer>> authMap = new HashMap<>(); //表示已经认证过的士兵集合,String是验证的口令，后面是用有同样口令的集合
 
+    private ArrayList<Soldier> soldierList = new ArrayList<>();
     private ArrayList<Soldier> team = new ArrayList<>();
+    private ArrayList<Soldier> spies = new ArrayList<>();
     private Soldier soldierLeader = new Soldier();
     private boolean gotoBox = true;
-    private int sIndex = 1;
+//    private int sIndex = 0;
 
     //private String plain = "We are family! oh yeah!";  //每个士兵要用于跟别人验证的口令，这个也应该是每个士兵的属性！
 
@@ -170,9 +160,11 @@ public class MainViewController {
         infoTextArea.clear();
         teamInfoArea.clear();
 
+        soldierList.clear();;
         team.clear();
+        spies.clear();
 
-        sIndex = 1;
+//        sIndex = 0;
 //        arriveTargetSet.clear();
 //        authSet.clear();
 //        authMap.clear();
@@ -229,15 +221,48 @@ public class MainViewController {
                         if(isInt){
                             int shareNum = Integer.parseInt(str);
                             if(shareNum != 0 && !isLand){
-                                isLand = true;
 
-                                sc.initial(0, soldierNumber, shareNum);
+                                //读入间谍人数
+                                str = spyNum.getText();
+                                isInt = true;
+                                if(!str.isEmpty()){
+                                    for(int i = 0; i < str.length(); i++){
+                                        if(str.charAt(i) >= '0' && str.charAt(i) <= '9'){
+                                        } else {
+                                            isInt = false;
+                                            break;
+                                        }
+                                    }
+                                    if(isInt){
+                                        int spyNum = Integer.parseInt(str);
+                                        if(spyNum != 0 && !isLand){
+                                            isLand = true;
 
-                                showGroup();
+                                            sc.initial(0, soldierNumber, shareNum, spyNum);
 
-                                //首先将第一个士兵放入team，自己就是leader
-                                team.add(sc.getSoldierList().get(0));
-                                soldierLeader = sc.getSoldierList().get(0);
+                                            //初始化士兵集合
+                                            initSoldiers();
+
+                                            //初始化界面显示
+                                            showGroup();
+
+                                            //创建队伍
+                                            initTeam();
+                                        }
+                                    } else {
+                                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                                        alert.setTitle("错误信息");
+                                        alert.setHeaderText(null);
+                                        alert.setContentText("请输入合法的间谍人数！");
+                                        alert.showAndWait();
+                                    }
+                                } else {
+                                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                                    alert.setTitle("错误信息");
+                                    alert.setHeaderText(null);
+                                    alert.setContentText("请输入间谍人数！");
+                                    alert.showAndWait();
+                                }
                             }
                         } else {
                             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -281,6 +306,42 @@ public class MainViewController {
 
     /**operate methods**/
     /**
+     * 将己方伞兵与间谍打乱在一起
+     */
+    private void initSoldiers(){
+        //添加所有己方士兵
+        soldierList = sc.getSoldierList();
+        //添加所有间谍
+        soldierList.addAll(sc.getSpyList());
+        //打乱顺序
+        Collections.shuffle(soldierList);
+    }
+
+    /**
+     * 为team找到第一个士兵
+     */
+    private void initTeam(){
+
+        //首先将第一个士兵放入team，自己就是leader
+        do{
+            Soldier soldier = soldierList.get(0);
+            if(RSA.soldierVerify(sc.getPublicRsaKeyList(),soldier)){
+                //验证成功，则将其加入团队，结束本函数
+                infoTextArea.appendText("- "+soldierList.get(0).getName() + "认证成功，加入队伍，成为指挥官！" + "\r\n");
+                team.add(soldierList.get(0));
+                soldierLeader = soldierList.get(0);
+                soldierList.remove(0);
+                break;
+            } else {
+                //验证失败，说明是间谍 ，继续下一个
+                infoTextArea.appendText("- "+soldierList.get(0).getName() + "是间谍！认证失败！" + "\r\n");
+                spies.add(soldierList.get(0));
+                soldierList.remove(0);
+            }
+        } while(!soldierList.isEmpty());
+
+    }
+    /**
      * 更新团队信息
      */
     private void updateTeamInfo(){
@@ -302,61 +363,60 @@ public class MainViewController {
 
         Target targetBox = sc.getWeaponBox();
 
-        ArrayList<Soldier> soldierList = sc.getSoldierList();
-
         //开箱后没有到达箱子的士兵继续到达箱子
         if(isOpenBox)
         {
-            if(team.size() < soldierList.size()) {
+            //首先将间谍筛选出来
+            for(Soldier soldier: soldierList){
+                if(!RSA.soldierVerify(sc.getPublicRsaKeyList(), soldier)){
+                    infoTextArea.appendText("- "+soldierList.get(0).getName() + "是间谍！认证失败！" + "\r\n");
+                    spies.add(soldier);
+                    soldierList.remove(soldier);
+                }
+            }
+            if(!soldierList.isEmpty()) {
                 for (Soldier sd : soldierList) {
-                    boolean bl = false;
-                    for (Soldier t : team) {
-                        if (sd.getID() == t.getID()) {
-                            bl = true;
-                            break;
+                    //如果进入leader范围，则开始认证
+                    if(dis(soldierLeader.getPosition(), sd.getPosition()) <= MIN_DISTANCE) {
+                        infoTextArea.appendText("- " + sd.getName() + "找到队伍！" + "\r\n");
+                        if(RSA.soldierVerify(sc.getPublicRsaKeyList(), sd)){
+                            //验证成功，将新成员加入团队
+                            infoTextArea.appendText("- "+sd.getName() + "认证成功，加入队伍！" + "\r\n");
+                            team.add(sd);
+                            soldierList.remove(sd);
+                            //选举新的leader
+                            infoTextArea.appendText("- "+"开始指挥官选举：" + "\r\n");
+                            //百万富翁算法选举
+                            infoTextArea.appendText("   - "+"百万富翁：");
+                            System.out.println(team.toString());
+                            int leaderID = Millionaire.getTopLeader_Million(team);
+                            System.out.println("leaderID: "+leaderID);
+                            if(leaderID == -1){
+                                infoTextArea.appendText("最高军衔不止1人！" + "\r\n");
+                                //进行电子投票
+                                infoTextArea.appendText("   - "+"电子投票：");
+                                leaderID = ElectronicVote.vote(team, (float)1);
+                            }
+                            //确定leader
+                            for(Soldier soldier: team){
+                                if(leaderID == soldier.getID()){
+                                    soldierLeader = soldier;
+                                    break;
+                                }
+                            }
+                            infoTextArea.appendText("新指挥官为" + soldierLeader.getName()+"\r\n");
+                        } else {
+                            //验证失败
+                            infoTextArea.appendText("- "+sd.getName() + "是间谍！认证失败！" + "\r\n");
+                            //确认间谍
+                            spies.add(sd);
+                            soldierList.remove(sd);
                         }
                     }
-                    if (!bl) {
-
-                        //如果进入leader范围，则开始认证
-                        if(dis(soldierLeader.getPosition(), sd.getPosition()) <= MIN_DISTANCE) {
-                            infoTextArea.appendText("- 队伍遇到" + sd.getName() + "！" + "\r\n");
-                            if(RSA.soldierVerify(sd)){
-                                //验证成功，将新成员加入团队
-                                infoTextArea.appendText("- "+sd.getName() + "认证成功，加入队伍！" + "\r\n");
-                                team.add(sd);
-                                //选举新的leader
-                                infoTextArea.appendText("- "+"开始指挥官选举：" + "\r\n");
-                                //百万富翁算法选举
-                                infoTextArea.appendText("   - "+"百万富翁算法选举" + "\r\n");
-                                System.out.println(team.toString());
-                                int leaderID = Millionaire.getTopLeader_Million(team);
-                                System.out.println("leaderID: "+leaderID);
-                                if(leaderID == -1){
-                                    infoTextArea.appendText("   - "+"最高军衔不止1人！" + "\r\n");
-                                    //进行电子投票
-                                    infoTextArea.appendText("   - "+"电子投票算法选举" + "\r\n");
-                                    leaderID = ElectronicVote.vote(team, (float)1);
-                                }
-                                //确定leader
-                                for(Soldier soldier: team){
-                                    if(leaderID == soldier.getID()){
-                                        soldierLeader = soldier;
-                                        break;
-                                    }
-                                }
-                                infoTextArea.appendText("   - "+"新指挥官为" + soldierLeader.getName()+"\r\n");
-                            } else {
-                                //验证失败
-                                infoTextArea.appendText("- "+sd.getName() + "认证失败！" + "\r\n");
-                            }
-                        }
-                        else
-                        {
-                            Point point = walkOne(sd.getPosition(), soldierLeader.getPosition());   //走一步
-                            sd.setPosition(point);
-                        }
-
+                    else
+                    {
+                        Point point = walkOne(sd.getPosition(), soldierLeader.getPosition());   //走一步
+                        sd.setPosition(point);
                     }
                 }
             }
@@ -394,53 +454,56 @@ public class MainViewController {
             }
         } else {
             //向下一个士兵前进
-            //如果leader进入到下一个士兵范围，则开始认证
-            if(dis(soldierLeader.getPosition(), soldierList.get(sIndex).getPosition()) <= MIN_DISTANCE) {
-                infoTextArea.appendText("- 队伍遇到" + soldierList.get(sIndex).getName() + "！" + "\r\n");
-                if(RSA.soldierVerify(soldierList.get(sIndex))){
-                    //验证成功，将新成员加入团队
-                    infoTextArea.appendText("- "+soldierList.get(sIndex).getName() + "认证成功，加入队伍！" + "\r\n");
-                    team.add(soldierList.get(sIndex));
-                    //选举新的leader
-                    infoTextArea.appendText("- "+"开始指挥官选举：" + "\r\n");
-                    //百万富翁算法选举
-                    infoTextArea.appendText("   - "+"百万富翁算法选举" + "\r\n");
-                    System.out.println(team.toString());
-                    int leaderID = Millionaire.getTopLeader_Million(team);
-                    System.out.println("leaderID: "+leaderID);
-                    if(leaderID == -1){
-                        infoTextArea.appendText("   - "+"最高军衔不止1人！" + "\r\n");
-                        //进行电子投票
-                        infoTextArea.appendText("   - "+"电子投票算法选举" + "\r\n");
-                        leaderID = ElectronicVote.vote(team, (float)1);
-                    }
-                    //确定leader
-                    for(Soldier soldier: team){
-                        if(leaderID == soldier.getID()){
-                            soldierLeader = soldier;
-                            break;
+            if(soldierList.isEmpty()){
+                //如果列表里的士兵都读取完了，终止刷新
+                isOk = false;
+                infoTextArea.appendText("- "+"已无其他士兵！"+"\r\n");
+            } else {
+                //如果leader进入到下一个士兵范围，则开始认证
+                if(dis(soldierLeader.getPosition(), soldierList.get(0).getPosition()) <= MIN_DISTANCE) {
+                    infoTextArea.appendText("- 队伍遇到" + soldierList.get(0).getName() + "！" + "\r\n");
+                    if(RSA.soldierVerify(sc.getPublicRsaKeyList(), soldierList.get(0))){
+                        //验证成功，将新成员加入团队
+                        infoTextArea.appendText("- "+soldierList.get(0).getName() + "认证成功，加入队伍！" + "\r\n");
+                        team.add(soldierList.get(0));
+                        soldierList.remove(0);
+                        //选举新的leader
+                        infoTextArea.appendText("- "+"开始指挥官选举：" + "\r\n");
+                        //百万富翁算法选举
+                        infoTextArea.appendText("   - "+"百万富翁：");
+                        System.out.println(team.toString());
+                        int leaderID = Millionaire.getTopLeader_Million(team);
+                        System.out.println("leaderID: "+leaderID);
+                        if(leaderID == -1){
+                            infoTextArea.appendText("最高军衔不止1人！" + "\r\n");
+                            //进行电子投票
+                            infoTextArea.appendText("   - "+"电子投票：");
+                            leaderID = ElectronicVote.vote(team, (float)1);
                         }
-                    }
-                    infoTextArea.appendText("   - "+"新指挥官为" + soldierLeader.getName()+"\r\n");
-                    //改变方向
-                    gotoBox = true;
-                    //下次检测下一个士兵
-                    sIndex++;
-                    if(sIndex == soldierList.size()){
-                        //如果列表里的士兵都读取完了，终止刷新
-                        isOk = false;
-                        infoTextArea.appendText("- "+"已无其他士兵！"+"\r\n");
+                        //确定leader
+                        for(Soldier soldier: team){
+                            if(leaderID == soldier.getID()){
+                                soldierLeader = soldier;
+                                break;
+                            }
+                        }
+                        infoTextArea.appendText("新指挥官为" + soldierLeader.getName()+"\r\n");
+                        //改变方向
+                        gotoBox = true;
+                    } else {
+                        //验证失败
+                        infoTextArea.appendText("- "+soldierList.get(0).getName() + "是间谍！认证失败！" + "\r\n");
+                        //确认间谍
+                        spies.add(soldierList.get(0));
+                        soldierList.remove(0);
                     }
                 } else {
-                    //验证失败
-                    infoTextArea.appendText("- "+soldierList.get(sIndex).getName() + "认证失败！" + "\r\n");
-                }
-            } else {
-                //team向士兵移动
-                for(int i = 0; i < team.size(); i++){
-                    Soldier soldier = team.get(i);
-                    Point point = walkOne(soldier.getPosition(), soldierList.get(sIndex).getPosition());   //走一步
-                    soldier.setPosition(point);
+                    //team向士兵移动
+                    for(int i = 0; i < team.size(); i++){
+                        Soldier soldier = team.get(i);
+                        Point point = walkOne(soldier.getPosition(), soldierList.get(0).getPosition());   //走一步
+                        soldier.setPosition(point);
+                    }
                 }
             }
         }
@@ -476,7 +539,6 @@ public class MainViewController {
         vb.getChildren().addAll(imageLableBox, lableBox);
 
 //        System.out.println("Box Location: " + vb.getLayoutX() + " " + vb.getLayoutY());
-
         sceneGroup.getChildren().add(vb);
 
         //绘制信件
@@ -497,7 +559,8 @@ public class MainViewController {
 
         //绘制士兵
         int index = 0;
-        for(Soldier soldier: team)
+        //绘制团队士兵
+        for(Soldier member: team)
         {
             Label imageLable = new Label();
             Image image;
@@ -507,7 +570,7 @@ public class MainViewController {
             }
             else
             {
-                if(soldier.getID() == soldierLeader.getID()){
+                if(member.getID() == soldierLeader.getID()){
                     image = new Image(this.getClass().getResourceAsStream("soldierLeader.png"));
                 } else {
                     image = new Image(this.getClass().getResourceAsStream("soldier.png"));
@@ -516,7 +579,7 @@ public class MainViewController {
 
             imageLable.setGraphic(new ImageView(image));
 
-            Label lable = new Label(String.valueOf(index + 1));
+            Label lable = new Label(String.valueOf(member.getID()));
 
             HBox hb = new HBox();
             if(isOpenBox)
@@ -526,8 +589,8 @@ public class MainViewController {
             }
             else
             {
-                hb.setLayoutX(soldier.getPosition().getX());
-                hb.setLayoutY(soldier.getPosition().getY());
+                hb.setLayoutX(member.getPosition().getX());
+                hb.setLayoutY(member.getPosition().getY());
             }
             hb.getChildren().addAll(lable, imageLable);
 
@@ -535,18 +598,38 @@ public class MainViewController {
 
             index ++;
         }
-
-        for(int i = team.size(); i < sc.getSoldierList().size(); i++)
+        //绘制间谍
+        for(Soldier spy: spies)
         {
-            Soldier soldier = sc.getSoldierList().get(i);
             Label imageLable = new Label();
-//            Image image = new Image("file:resource/image/soldier.png");
+
+            Image image;
+            image = new Image(this.getClass().getResourceAsStream("soldierEnemy2.png"));
+
+            imageLable.setGraphic(new ImageView(image));
+
+            Label lable = new Label(String.valueOf(spy.getID()));
+
+            HBox hb = new HBox();
+
+            hb.setLayoutX(spy.getPosition().getX());
+            hb.setLayoutY(spy.getPosition().getY());
+
+            hb.getChildren().addAll(lable, imageLable);
+
+            sceneGroup.getChildren().add(hb);
+        }
+        //绘制未检测士兵
+        for(Soldier soldier: soldierList)
+        {
+            Label imageLable = new Label();
+
             Image image;
             image = new Image(this.getClass().getResourceAsStream("soldier.png"));
 
             imageLable.setGraphic(new ImageView(image));
 
-            Label lable = new Label(String.valueOf(i + 1));
+            Label lable = new Label(String.valueOf(soldier.getID()));
 
             HBox hb = new HBox();
 

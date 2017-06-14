@@ -28,6 +28,7 @@ import static thu.infosecurity.simulate.util.RSA.soldierVerify;
  */
 public class SceneInitial {
 
+    //场景元素
     private Target weaponBox;
     private Target letter;
     private ArrayList<Soldier> soldierList;
@@ -136,7 +137,7 @@ public class SceneInitial {
         Target letter = new Target();
         /*设置基本信息*/
         letter.setObjName("letter");
-        letter.setPosition(new Point(SceneControl.generateRandom(10,800), SceneControl.generateRandom(10,600)));
+        letter.setPosition(new Point(SceneControl.generateRandom(0, 850), SceneControl.generateRandom(0, 510)));
         /*设置访问控制信息*/
         letter.setSecretLevel("S");
         letter.setRange("G");

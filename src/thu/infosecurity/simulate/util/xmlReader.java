@@ -2,6 +2,7 @@ package thu.infosecurity.simulate.util;
 
 import com.sun.tools.javac.util.Pair;
 import thu.infosecurity.simulate.controller.SceneControl;
+import thu.infosecurity.simulate.controller.SceneInitial;
 import thu.infosecurity.simulate.model.Soldier;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -100,7 +101,7 @@ public class xmlReader {
             //姓名
             soldier.setName("soldier"+(i+1));
             //坐标
-            soldier.setPosition(new Point(SceneControl.generateRandom(0,850), SceneControl.generateRandom(0,620)));
+            soldier.setPosition(new Point(SceneControl.generateRandom(0, 900), SceneControl.generateRandom(0, 550)));
             //RSA公私钥
             Map<String, String> key = RSA.RSA_GenerateKey(20, 10);
             soldier.setPuKey(key.get("n") + "," + key.get("e"));

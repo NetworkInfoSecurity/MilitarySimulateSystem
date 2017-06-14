@@ -11,6 +11,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import thu.infosecurity.simulate.controller.SceneInitial;
@@ -30,18 +31,15 @@ public class MainViewController {
 
     @FXML
     private Button landBtn;
-
     @FXML
     private Button startBtn;
-
+    @FXML
+    private Button pauseBtn;
     @FXML
     private Button resetBtn;
 
     @FXML
     private Group sceneGroup;
-
-    @FXML
-    private Canvas sceneCanvas;
 
     @FXML
     private TextArea teamInfoArea;
@@ -94,7 +92,9 @@ public class MainViewController {
 
         sc = new SceneInitial();
 
+        soldierList.clear();;
         team.clear();
+        spies.clear();
 
 //        arriveTargetSet.clear();
 //        authSet.clear();
@@ -180,6 +180,16 @@ public class MainViewController {
         if(isLand)
         {
             isOk = true;
+        }
+    }
+
+    /**
+     * handle pauseBtn event
+     */
+    @FXML
+    private void handlePauseBtn(){
+        if(isLand){
+            isOk = false;
         }
     }
 

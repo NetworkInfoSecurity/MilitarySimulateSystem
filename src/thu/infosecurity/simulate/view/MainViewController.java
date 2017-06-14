@@ -375,7 +375,7 @@ public class MainViewController {
         while(soldierIterator.hasNext()){
             Soldier soldier = soldierIterator.next();
             if(!RSA.soldierVerify(sc.getPublicRsaKeyList(), soldier, soldierLeader.getDESKey())){
-                infoTextArea.appendText("- "+soldierList.get(0).getName() + "是间谍！认证失败！" + "\r\n");
+                infoTextArea.appendText("- "+soldier.getName() + "是间谍！认证失败！" + "\r\n");
                 spies.add(soldier);
                 soldierIterator.remove();
             }

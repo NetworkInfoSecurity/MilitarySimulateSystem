@@ -40,13 +40,14 @@ public class SceneInitial {
 
         SceneInitial si = new SceneInitial();
         si.initial(0, 7, 3, 1);
-        System.out.println(si.weaponBox);
-        System.out.println(si.letter);
-        for (Soldier soldier : si.soldierList) {
-            System.out.println(soldier);
-        }
+//        System.out.println(si.weaponBox);
+//        System.out.println(si.letter);
+//        for (Soldier soldier : si.soldierList) {
+//            System.out.println(soldier);
+//        }
 
         /*测试共享秘钥是否可行*/
+        
         ArrayList<Soldier> team = new ArrayList<>();
         for(int i = 0; i < si.soldierList.size(); i++){
             System.out.println("teamNum: "+(i+1));
@@ -75,10 +76,23 @@ public class SceneInitial {
         spyList = initialSpyList(spyNum, soldierNum);
 
         //将所有士兵的信息打印出来帮助调试
-        System.out.println("Soliders");
-        System.out.println(soldierList.toString());
-        System.out.println("Spies");
-        System.out.println(spyList.toString());
+        System.out.println("=====================Soliders");
+        for (Soldier soldier : soldierList)
+            System.out.println(soldier);
+        System.out.println("=====================Spies");
+        for (Soldier spy : spyList)
+            System.out.println(spy);
+
+        System.out.println("=====================WeaponBox");
+        System.out.println(weaponBox);
+        System.out.println("=====================Letter");
+        System.out.println(letter);
+
+
+        /*测试信封能否打开*/
+        System.out.println("我方士兵打开信封测试：" + letter.canOpen(soldierList.get(0)));
+        System.out.println("敌方士兵打开信封测试：" + letter.canOpen(spyList.get(0)));
+
 
         return ;
     }
@@ -140,7 +154,7 @@ public class SceneInitial {
         letter.setPosition(new Point(SceneControl.generateRandom(0, 850), SceneControl.generateRandom(0, 510)));
         /*设置访问控制信息*/
         letter.setSecretLevel("S");
-        letter.setRange("G");
+        letter.setRange("S");
         /*设置共享秘钥信息*/
         letter.setShareFlag(false);
         return letter;
@@ -167,6 +181,12 @@ public class SceneInitial {
         ArrayList<Soldier> spyList = new ArrayList<>();
         /*初始化一般信息*/
         spyList = xmlReader.generateSoldierListbyRandom(spyNum, startID);
+        for (Soldier spy : spyList) {
+            //设置spy无法打开信封
+//            Set<String> rangeSet = new HashSet<>();
+//            rangeSet.add("")
+            spy.setRange(null);
+        }
         return spyList;
     }
 

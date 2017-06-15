@@ -116,7 +116,9 @@ public class xmlReader {
             //范畴集
 //            String[] rangeList = {"S", "G", "A"};
             Set<String> rangeSet = new HashSet<>();
-            rangeSet.add("S");//假定都是G
+            rangeSet.add("S");//假定都是S
+            rangeSet.add("G");//假定都是S
+            rangeSet.add("A");//假定都是S
             soldier.setRange(rangeSet);
             //System.out.println(soldier);
             //添加成员

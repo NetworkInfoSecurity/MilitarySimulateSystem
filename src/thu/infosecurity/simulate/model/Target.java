@@ -112,7 +112,9 @@ public class Target {
 
     //利用访问控制看能否查看内容，比如地上一个信件，士兵捡到信件看可否打开
     public boolean canOpen(Soldier user){
-        if( shareFlag && toLevel(this.secretLevel) <= toLevel(user.getSecretLevel()) && user.getRange().contains(range))
+        if(user.getRange() == null || user.getSecretLevel() == null)
+            return false;
+        if( !shareFlag && toLevel(this.secretLevel) <= toLevel(user.getSecretLevel()) && user.getRange().contains(range))
             return true;
         return false;
     }

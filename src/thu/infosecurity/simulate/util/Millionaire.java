@@ -123,7 +123,7 @@ public class Millionaire {
         String[] str = puKey.split(",");
         String part1_puKey = str[1];
         String part2_puKey = str[0];
-        System.out.println("part2_puKey:" + part2_puKey);
+//        System.out.println("part2_puKey:" + part2_puKey);
         BigInteger result = encrypt(bigNum, new BigInteger(part1_puKey), new BigInteger(part2_puKey));
         int level_num = Target.toLevel(A.getSecretLevel())+1;//等级从1开始，1、2、3
         BigInteger level = new BigInteger(level_num+"");
@@ -155,7 +155,7 @@ public class Millionaire {
             String part2_prKey = str[0];
             BigInteger temp2 = decrypt(temp1, new BigInteger(part1_prKey), new BigInteger(part2_prKey));
             temp2 = temp2.mod(bigNum);
-            System.out.println("temp2:"+temp2);
+//            System.out.println("temp2:"+temp2);
 
             if( i > 1 + Target.toLevel(B.getSecretLevel()) ){  //把等级值加1
                 temp2 = temp2.add(new BigInteger("1"));
@@ -177,10 +177,10 @@ public class Millionaire {
         BigInteger random_A = new BigInteger(random1);
         BigInteger random_B = new BigInteger(list.get(list.size()-1));
         int result1 = Integer.parseInt(random_A.mod(random_B).toString());
-        System.out.println("result1=" + result1);
+//        System.out.println("result1=" + result1);
         int result2 = Integer.parseInt(list.get( Target.toLevel(A.getSecretLevel())));
         //int result2 = Integer.parseInt(list.get( 1 ));
-        System.out.println("result2=" + result2);
+//        System.out.println("result2=" + result2);
         if(result1 != result2){
             return false;
         }else{

@@ -124,7 +124,7 @@ public class Target {
      * @return
      */
     public String getMessages(){
-        return "队员注意！装备箱位置在（"+(int)getPosition().getX()+","+(int)getPosition().getY()+")！";
+        return "装备箱位置在（"+(int)getPosition().getX()+", "+(int)getPosition().getY()+"）";
     }
 
     /*辅助函数，用户访问控制*/

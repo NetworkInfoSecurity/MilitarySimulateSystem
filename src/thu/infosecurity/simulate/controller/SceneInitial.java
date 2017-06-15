@@ -47,7 +47,7 @@ public class SceneInitial {
 //        }
 
         /*测试共享秘钥是否可行*/
-        
+
         ArrayList<Soldier> team = new ArrayList<>();
         for(int i = 0; i < si.soldierList.size(); i++){
             System.out.println("teamNum: "+(i+1));
@@ -121,6 +121,7 @@ public class SceneInitial {
         } else {
             /*文件读取*/
             soldierList =  xmlReader.getSoldierListFromFile();
+            SharedKey.setSharedKeyforSoldierList(soldierList, weaponBox);
         }
         return soldierList;
     }

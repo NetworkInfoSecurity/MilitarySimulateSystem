@@ -50,11 +50,11 @@ public class xmlReader {
                 String name = node.getElementsByTagName("name").item(0).getFirstChild().getNodeValue();
                 String puKey = node.getElementsByTagName("publicKey").item(0).getFirstChild().getNodeValue();
                 String prKey = node.getElementsByTagName("privateKey").item(0).getFirstChild().getNodeValue();
-                String shareKey = node.getElementsByTagName("shareKey").item(0).getFirstChild().getNodeValue();
+//                String shareKey = node.getElementsByTagName("shareKey").item(0).getFirstChild().getNodeValue();
 
-                Integer A = Integer.parseInt(shareKey.split(",")[0]);
-                Integer B = Integer.parseInt(shareKey.split(",")[1]);
-                Pair<Integer, Integer> shareKeyPair = new Pair<>(A, B);
+//                Integer A = Integer.parseInt(shareKey.split(",")[0]);
+//                Integer B = Integer.parseInt(shareKey.split(",")[1]);
+//                Pair<Integer, Integer> shareKeyPair = new Pair<>(A, B);
 
                 String secretLevel = node.getElementsByTagName("secretLevel").item(0).getFirstChild().getNodeValue();
 
@@ -70,10 +70,12 @@ public class xmlReader {
                 }
                 //初始化用户并添加
                 Soldier user = new Soldier();
+                user.setID(i+1);
                 user.setName(name);
+                user.setPosition(new Point(SceneControl.generateRandom(0, 790), SceneControl.generateRandom(0, 630)));
                 user.setPuKey(puKey);
                 user.setPrKey(prKey);
-                user.setShareKey(shareKeyPair);
+//                user.setShareKey(shareKeyPair);
                 user.setSecretLevel(secretLevel);
                 user.setRange(rangeSet);
                 soldierList.add(user);

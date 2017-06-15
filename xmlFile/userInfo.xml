@@ -2,14 +2,20 @@
 <!--
 secretLevel     采用BLP模型，分文秘密'S'，机密'C'，绝密'T'三个等级
 ranges:         海军'S'，陆军'G'，空军'A'
+2017.06.15
+删除了shareKey字段：shareKey应该临时生成
+添加了position字段，暂定没用，还是临时生成
+
+
+
 -->
 
 <userList>
     <user>
         <name>Chen Weihang</name>
+        <position>682,259</position>
         <publicKey>180854786745822734968547923111966820333,7785391487685444343</publicKey>
         <privateKey>180854786745822734968547923111966820333,125735460058687390574064346050329735047</privateKey>
-        <shareKey>1,2</shareKey>
         <secretLevel>T</secretLevel>
         <ranges>
             <range>S</range>
@@ -19,51 +25,56 @@ ranges:         海军'S'，陆军'G'，空军'A'
     </user>
     <user>
         <name>Wang Nan</name>
+        <position>529,446</position>
         <publicKey>484986057887349446282748452562050283673,4481228382178645219</publicKey>
         <privateKey>484986057887349446282748452562050283673,311143577012482823639108032227602665579</privateKey>
-        <shareKey>2,3</shareKey>
         <secretLevel>C</secretLevel>
         <ranges>
+            <range>S</range>
             <range>G</range>
         </ranges>
     </user>
     <user>
         <name>Sun Lin</name>
+        <position>354,583</position>
         <publicKey>5991842715850545215842288803859621264207,81774940678644322147</publicKey>
         <privateKey>5991842715850545215842288803859621264207,4369135254356852362357928842201645594547</privateKey>
-        <shareKey>3,4</shareKey>
         <secretLevel>C</secretLevel>
         <ranges>
+            <range>S</range>
             <range>G</range>
         </ranges>
     </user>
     <user>
         <name>Li Xu</name>
+        <position>535,206</position>
         <publicKey>4498702689568740324165515140546033102619,56499188281434154099</publicKey>
         <privateKey>4498702689568740324165515140546033102619,3537420959150237106182912551206221495083</privateKey>
-        <shareKey>4,5</shareKey>
         <secretLevel>S</secretLevel>
         <ranges>
+            <range>S</range>
             <range>G</range>
         </ranges>
     </user>
     <user>
         <name>Zhang Yafei</name>
+        <position>542,453</position>
         <publicKey>833409598287268725695160112053347208097,9738126678639348705</publicKey>
         <privateKey>833409598287268725695160112053347208097,394849468514267047125611198861894021245</privateKey>
-        <shareKey>5,6</shareKey>
         <secretLevel>S</secretLevel>
         <ranges>
+            <range>S</range>
             <range>G</range>
         </ranges>
     </user>
     <user>
-        <name>UnauthorizedPeople</name>
+        <name>UnNamePeople</name>
+        <position>114,591</position>
         <publicKey>6985474928290835767300603608961963143397,52945119327196911743</publicKey>
         <privateKey>6985474928290835767300603608961963143397,6390291320382700384590091382479120641407</privateKey>
-        <shareKey>6,7</shareKey>
         <secretLevel>C</secretLevel>
         <ranges>
+            <range>S</range>
             <range>A</range>
         </ranges>
     </user>

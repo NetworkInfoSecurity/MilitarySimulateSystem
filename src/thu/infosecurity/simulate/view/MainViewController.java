@@ -1,6 +1,7 @@
 package thu.infosecurity.simulate.view;
 
 import javafx.application.Platform;
+import javafx.event.*;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
@@ -11,7 +12,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import thu.infosecurity.simulate.controller.SceneInitial;
@@ -80,7 +81,19 @@ public class MainViewController {
 
     private boolean isOpenBox = false;  //表示打开设备箱子
 
+    private boolean isOpenLetter = false;  //表示信封是否打开
+
     private Thread refresh;
+
+    //////手动点击移动士兵
+    private int fromSoldierID = -1;
+    private int toSoldierID = -1;
+
+    private boolean isClick = false;  //表示手动移动开始
+
+    private boolean isToLetter = false; //表示是否前往信封
+
+    private ArrayList<Soldier> allMembers = new ArrayList<>();  //表示界面上的所有士兵
 
 //    @FXML
 //    private PerspectiveCamera sceneCam;
@@ -92,7 +105,7 @@ public class MainViewController {
 
         sc = new SceneInitial();
 
-        soldierList.clear();;
+        soldierList.clear();
         team.clear();
         spies.clear();
 
@@ -128,6 +141,18 @@ public class MainViewController {
                                 runOperate();
                                 showGroup();
                             }
+                            else if(isClick)
+                            {
+                                updateTeamInfo();
+                                clickRunOperate();
+                                showGroup();
+                            }
+
+                            if(isToLetter)
+                            {
+                                runToLetter();
+                                showGroup();
+                            }
                         }
                     });
                 }
@@ -136,6 +161,589 @@ public class MainViewController {
         };
         refresh.start();
 
+        //初始化时添加手动点击面板的事件
+        /*
+        sceneGroup.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if(event.getEventType().toString().equals("MOUSE_CLICKED"))
+                {
+                    if(!isOk && !isOpenBox)
+                    {
+                        System.out.println(event.getX() + " : " + event.getY());
+                        if(fromSoldierID == -1)
+                        {
+                            if(team.size() == 0)
+                            {
+                                for(Soldier sd : sc.getSoldierList())
+                                {
+                                    if(dis(sd.getPosition(), new Point((int)event.getX(), (int)event.getY())) < 30)
+                                    {
+                                        fromSoldierID = sd.getID();
+//                                        System.out.println("::" + fromSoldierID);
+                                        break;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                for(Soldier sd : team)
+                                {
+                                    if(dis(sd.getPosition(), new Point((int)event.getX(), (int)event.getY())) < 30)
+                                    {
+                                        fromSoldierID = soldierLeader.getID();
+//                                        System.out.println("::" + fromSoldierID);
+                                        break;
+                                    }
+                                }
+                            }
+
+                        }
+                        else
+                        {
+                            if(toSoldierID == -1)
+                            {
+                                for(Soldier sd : soldierList)
+                                {
+                                    if(dis(sd.getPosition(), new Point((int)event.getX(), (int)event.getY())) < 30 && sd.getID() != fromSoldierID)
+                                    {
+                                        toSoldierID = sd.getID();
+                                        infoTextArea.appendText("- 队伍向soldier" + toSoldierID + "士兵前进！" + "\r\n");
+                                        break;
+                                    }
+                                }
+
+                                if(toSoldierID == -1)
+                                {
+                                    if(dis(sc.getWeaponBox().getPosition(), new Point((int)event.getX(), (int)event.getY())) < 50)
+                                    {
+                                        toSoldierID = 0;   //0表示向箱子走
+                                        infoTextArea.appendText("- 队伍向装备箱前进！" + "\r\n");
+                                    }
+
+                                    if(dis(sc.getLetter().getPosition(), new Point((int)event.getX(), (int)event.getY())) < 50)
+                                    {
+                                        toSoldierID = -2;  //-2表示向信封走
+                                    }
+                                }
+
+                                if(toSoldierID == -1)
+                                {
+                                    fromSoldierID = -1;
+                                }
+
+                            }
+                        }
+
+//                        System.out.println(fromSoldierID + " to " + toSoldierID);
+                    }
+
+                    //打印出点击后所有的正在移动的士兵对儿
+                    if(fromSoldierID != -1 && toSoldierID != -1)
+                    {
+                        System.out.println(fromSoldierID + " to " + toSoldierID);
+
+                        if(team.size() == 0)   //初始team中的第一个士兵
+                        {
+                            Soldier soldier = new Soldier();
+                            for(Soldier sd : soldierList)
+                            {
+                                if(sd.getID() == fromSoldierID)
+                                {
+                                    soldier = sd;
+                                    break;
+                                }
+                            }
+
+                            if(RSA.soldierVerify(sc.getPublicRsaKeyList(),soldier, soldierLeader.getDESKey())){
+                                //验证成功，则将其加入团队，结束本函数
+                                infoTextArea.appendText("- "+ soldier.getName() + "认证成功，加入队伍，成为指挥官！" + "\r\n");
+                                team.add(soldier);
+                                soldierLeader = soldier;
+                                soldierList.remove(soldier);
+
+                                isClick = true;    //表示单击开始行走
+                            } else {
+                                //验证失败，说明是间谍 ，继续下一个
+                                infoTextArea.appendText("- "+ soldier.getName() + "是间谍！认证失败！" + "\r\n");
+                                spies.add(soldier);
+                                soldierList.remove(soldier);
+
+                                fromSoldierID = -1;
+                                toSoldierID = -1;
+                            }
+                        }
+
+                    }
+
+
+                }
+            }
+        });
+        */
+    }
+
+    //标签点击事件绑定
+    private void MouseClickedEventHandler(Label label, int ID)
+    {
+        label.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if(event.getEventType().toString().equals("MOUSE_CLICKED"))
+                {
+                    if(!isOk)
+                    {
+//                        System.out.println("Click: " + event.getX() + " : " + event.getY());
+
+                        if(fromSoldierID == -1)
+                        {
+                            fromSoldierID = ID;
+                            System.out.println("Click1: " + event.getX() + " : " + event.getY() + " ID: " + ID);
+                            infoTextArea.appendText("---Click1-ID: " + ID + "\r\n");
+                        }
+                        else
+                        {
+                            if(toSoldierID == -1 && fromSoldierID != ID)
+                            {
+                                toSoldierID = ID;
+
+                                System.out.println("Click2: " + event.getX() + " : " + event.getY() + " ID: " + ID);
+                                infoTextArea.appendText("---Click2-ID: " + ID + "\r\n");
+
+                                if(fromSoldierID == -2 || fromSoldierID == 0)
+                                {
+                                    fromSoldierID = -1;
+                                    toSoldierID = -1;
+                                }
+
+                                if(toSoldierID != -1)
+                                {
+                                    if(toSoldierID == -2)    //-2表示向信封走
+                                    {
+                                        infoTextArea.appendText("- soldier" + fromSoldierID + "向信封处前进！" + "\r\n");
+                                    }
+                                    else if(toSoldierID == 0)  //0表示向箱子走
+                                    {
+                                        infoTextArea.appendText("- soldier" + fromSoldierID + "向装备箱前进！" + "\r\n");
+                                    }
+                                    else
+                                    {
+                                        infoTextArea.appendText("- soldier" + fromSoldierID + "向soldier" + toSoldierID + "前进！" + "\r\n");
+                                    }
+                                }
+                            }
+                        }
+
+//                        System.out.println(fromSoldierID + " to " + toSoldierID);
+                    }
+
+                    //打印出点击后所有的正在移动的士兵对儿
+                    if(fromSoldierID != -1 && toSoldierID != -1)
+                    {
+                        System.out.println("move: " + fromSoldierID + " to " + toSoldierID);
+
+                        if(team.size() == 0)   //初始team中的第一个士兵
+                        {
+                            Soldier soldier = new Soldier();
+                            for(Soldier sd : allMembers)
+                            {
+                                if(sd.getID() == fromSoldierID)
+                                {
+                                    soldier = sd;
+                                    break;
+                                }
+                            }
+
+                            if(soldier.getName() == null)
+                            {
+                                fromSoldierID = -1;
+                                toSoldierID = -1;
+                                return;
+                            }
+
+                            if(RSA.soldierVerify(sc.getPublicRsaKeyList(),soldier, soldierLeader.getDESKey())){
+                                //验证成功，则将其加入团队，结束本函数
+                                infoTextArea.appendText("- "+ soldier.getName() + "认证成功，加入队伍，成为指挥官！" + "\r\n");
+                                team.add(soldier);
+                                soldierLeader = soldier;
+                                soldierList.remove(soldier);
+
+                                isClick = true;    //表示单击开始行走
+
+                            } else {
+                                //验证失败，说明是间谍 ，继续下一个
+                                infoTextArea.appendText("- "+ soldier.getName() + "是间谍！认证失败！" + "\r\n");
+                                spies.add(soldier);
+                                soldierList.remove(soldier);
+
+                                fromSoldierID = -1;
+                                toSoldierID = -1;
+                            }
+                        }
+                        else
+                        {
+//                            boolean isInFrom = false;
+//                            for(Soldier sd : team)
+//                            {
+//                                if(fromSoldierID == sd.getID())
+//                                {
+//                                    isInFrom = true;
+//                                    break;
+//                                }
+//                            }
+//                            boolean isInTo = false;
+//                            for(Soldier sd : team)
+//                            {
+//                                if(toSoldierID == sd.getID())
+//                                {
+//                                    isInTo = true;
+//                                    break;
+//                                }
+//                            }
+//
+//                            if(!isInFrom && !isInTo)
+//                            {
+//                                fromSoldierID = -1;
+//                                toSoldierID = -1;
+//                            }
+                        }
+
+                    }
+
+
+                }
+            }
+        });
+    }
+
+    //手动单击的士兵动作
+    private void clickRunOperate()
+    {
+
+        //开箱后没有到达箱子的士兵继续到达箱子
+        if(isOpenBox && false)
+        {
+            System.out.println("isOpenBox After!");
+            if(!soldierList.isEmpty()) {
+                Iterator<Soldier> soldierIterator = soldierList.iterator();
+                while (soldierIterator.hasNext()) {
+                    Soldier sd = soldierIterator.next();
+                    //如果进入leader范围，则开始认证
+                    if(dis(soldierLeader.getPosition(), sd.getPosition()) <= MIN_DISTANCE) {
+                        infoTextArea.appendText("- " + sd.getName() + "找到队伍！" + "\r\n");
+                        if(RSA.soldierVerify(sc.getPublicRsaKeyList(), sd, soldierLeader.getDESKey())){
+                            //验证成功，将新成员加入团队
+                            infoTextArea.appendText("- "+sd.getName() + "认证成功，加入队伍！" + "\r\n");
+                            team.add(sd);
+                            //soldierList.remove(sd);
+                            soldierIterator.remove();
+                            //选举新的leader
+                            infoTextArea.appendText("- "+"开始指挥官选举：" + "\r\n");
+                            //百万富翁算法选举
+                            infoTextArea.appendText("   - "+"百万富翁：");
+//                            System.out.println(team.toString());
+                            ArrayList<Soldier> leaders = Millionaire.getTopLeader_Million(team);
+//                            System.out.println("leaderID: "+leaderID);
+                            if(leaders.size() > 1){
+                                infoTextArea.appendText("最高军衔不止1人！" + "\r\n");
+                                //进行电子投票
+                                infoTextArea.appendText("   - "+"电子投票：");
+                                //返回最终leader在leaders列表里面的索引
+                                int tempIndex = blindSignature.vote(team, leaders.size());
+                                //确定leader
+                                soldierLeader = leaders.get(tempIndex-1);
+                            } else {
+                                //确定leader
+                                soldierLeader = leaders.get(0);
+                            }
+                            infoTextArea.appendText("新指挥官为" + soldierLeader.getName()+"\r\n");
+                        } else {
+                            //验证失败
+                            infoTextArea.appendText("- "+sd.getName() + "是间谍！认证失败！" + "\r\n");
+                            //确认间谍
+                            spies.add(sd);
+                            //soldierList.remove(sd);
+                            soldierIterator.remove();
+                        }
+                    }
+                    else
+                    {
+                        Point point = walkOne(sd.getPosition(), soldierLeader.getPosition());   //走一步
+                        sd.setPosition(point);
+                    }
+                }
+            }
+            else
+            {
+//                isClick = false; //停止演示
+            }
+            return;
+        }
+
+        if(!isOk && fromSoldierID != -1 && toSoldierID != -1)
+        {
+            if(toSoldierID == 0) //0表示箱子
+            {
+                Target targetBox = sc.getWeaponBox();
+
+                boolean isIn = false; //表示起始点是否在team中
+                for(Soldier sd : team)
+                {
+                    if(sd.getID() == fromSoldierID)
+                    {
+                        isIn = true;
+                        break;
+                    }
+                }
+                if(isIn)
+                {
+                    for(int i = 0; i < team.size(); i++){
+                        Soldier soldier = team.get(i);
+                        Point point = walkOne(soldier.getPosition(), targetBox.getPosition());   //走一步
+                        soldier.setPosition(point);
+                    }
+                }
+                else
+                {
+                    Soldier ssd = new Soldier();
+                    for(Soldier s : allMembers)
+                    {
+                        if(s.getID() == fromSoldierID)
+                        {
+                            ssd = s;
+                            break;
+                        }
+                    }
+                    Point point = walkOne(ssd.getPosition(), targetBox.getPosition());   //走一步
+                    ssd.setPosition(point);
+                }
+
+                //向箱子方向前进
+                //如果leader进入可验证箱子的范围，则team可以开始验证
+                if(dis(soldierLeader.getPosition(), targetBox.getPosition()) <= MIN_DISTANCE + 20)
+                {
+                    //打开box的操作，输入team，调用共享秘钥模块，获取秘钥
+                    if (!targetBox.canOpen(team)) {
+                        //表示获取秘钥失败，开箱失败
+                        infoTextArea.appendText("- "+"验证失败，无法开启装备箱！" + "\r\n");
+                        //验证失败就返回，去寻找下一个士兵
+
+                    } else {
+                        //获取秘钥成功，开箱成功
+                        infoTextArea.appendText("- "+"验证成功，装备箱开启成功！" + "\r\n");
+                        isOpenBox = true; //打开设备box成功
+
+                        //开箱成功后当即把所有间谍移除
+                        removeSpies();
+                    }
+                    fromSoldierID = -1;
+                    toSoldierID = -1;
+                }
+
+            }
+            else if(toSoldierID == -2)   //-2表示信封
+            {
+                Soldier soldierLetter = new Soldier();
+                for(Soldier sd : allMembers)
+                {
+                    if(sd.getID() == fromSoldierID)
+                    {
+                        soldierLetter = sd;
+                        break;
+                    }
+                }
+
+                Point point = walkOne(soldierLetter.getPosition(), sc.getLetter().getPosition());   //走一步
+                soldierLetter.setPosition(point);
+
+                if(dis(soldierLetter.getPosition(), sc.getLetter().getPosition()) < MIN_DISTANCE + 10)
+                {
+                    System.out.println("soildier" + soldierLetter.getID() + "到达机密文件！");
+                    if(sc.getLetter().canOpen(soldierLetter))
+                    {
+                        System.out.println("soildier" + soldierLetter.getID() + "能够打开机密文件！");
+                        infoTextArea.appendText("    - soildier" + soldierLetter.getID() + "成功获取机密文件！" + "\r\n");
+                    }
+                    else
+                    {
+                        infoTextArea.appendText("    - soildier" + soldierLetter.getID() + "机密文件获取失败！" + "\r\n");
+                    }
+                    fromSoldierID = -1;
+                    toSoldierID = -1;
+                }
+
+
+            }
+            else   //表示走向士兵
+            {
+                boolean isDis = false;
+                Soldier soldierNew = new Soldier();
+
+                Soldier soldierTo = new Soldier();
+                boolean isToTeam = false;
+                for(Soldier sd : team)
+                {
+                    if(sd.getID() == toSoldierID)
+                    {
+                        soldierTo = soldierLeader;
+                        isToTeam = true;
+                        break;
+                    }
+                }
+                if(!isToTeam)
+                {
+                    for(Soldier sd : allMembers)
+                    {
+                        if(sd.getID() == toSoldierID)
+                        {
+                            soldierTo = sd;
+                            break;
+                        }
+                    }
+                }
+
+                if(soldierTo.getName() == null)
+                {
+                    fromSoldierID = -1;
+                    toSoldierID = -1;
+                    return;
+                }
+
+//                System.out.println("soldierTo.ID: " + soldierTo.getID() + " Point:" + soldierTo.getPosition().getX() + " " + soldierTo.getPosition().getY());
+
+                boolean isFromTeam = false; //表示起始点是否在team中
+                for(Soldier sd : team)
+                {
+                    if(sd.getID() == fromSoldierID)
+                    {
+                        isFromTeam = true;
+                        break;
+                    }
+                }
+
+                if(isFromTeam)
+                {
+                    for(int i = 0; i < team.size(); i++){
+                        Soldier soldier = team.get(i);
+                        Point point = walkOne(soldier.getPosition(), soldierTo.getPosition());   //走一步
+                        soldier.setPosition(point);
+                    }
+                    if(dis(soldierLeader.getPosition(), soldierTo.getPosition()) <= MIN_DISTANCE)
+                    {
+                        soldierNew = soldierTo;
+                        isDis = true;
+                    }
+                }
+                else
+                {
+                    Soldier ssd = new Soldier();
+                    for(Soldier s : allMembers)
+                    {
+                        if(s.getID() == fromSoldierID)
+                        {
+                            ssd = s;
+                            break;
+                        }
+                    }
+
+                    if(ssd.getName() == null)
+                    {
+                        fromSoldierID = -1;
+                        toSoldierID = -1;
+                        return;
+                    }
+
+                    Point point = walkOne(ssd.getPosition(), soldierTo.getPosition());   //走一步
+                    ssd.setPosition(point);
+                    if(dis(ssd.getPosition(), soldierTo.getPosition()) <= MIN_DISTANCE)
+                    {
+                        soldierNew = ssd;
+                        isDis = true;
+                    }
+                }
+
+                if(!isToTeam && !isFromTeam)
+                {
+                    if(isDis)
+                    {
+                        fromSoldierID = -1;
+                        toSoldierID = -1;
+                        return;
+                    }
+                }
+
+                if(isDis)
+                {
+                    infoTextArea.appendText("- 队伍遇到" + soldierNew.getName() + "！" + "\r\n");
+                    if(RSA.soldierVerify(sc.getPublicRsaKeyList(), soldierNew, soldierLeader.getDESKey())){
+                        //验证成功，将新成员加入团队
+                        infoTextArea.appendText("- "+ soldierNew.getName() + "认证成功，加入队伍！" + "\r\n");
+                        team.add(soldierNew);
+                        soldierList.remove(soldierNew);
+                        //选举新的leader
+                        infoTextArea.appendText("- "+"开始指挥官选举：" + "\r\n");
+                        //百万富翁算法选举
+                        infoTextArea.appendText("   - "+"百万富翁：");
+//                        System.out.println(team.toString());
+                        ArrayList<Soldier> leaders = Millionaire.getTopLeader_Million(team);
+//                        System.out.println("leaderID: "+leaderID);
+                        if(leaders.size() > 1){
+                            infoTextArea.appendText("最高军衔不止1人！" + "\r\n");
+                            //进行电子投票
+                            infoTextArea.appendText("   - "+"电子投票：");
+                            //返回最终leader在leaders列表里面的索引
+                            int tempIndex = blindSignature.vote(team, leaders.size());
+                            //确定leader
+                            soldierLeader = leaders.get(tempIndex-1);
+                        } else {
+                            //确定leader
+                            soldierLeader = leaders.get(0);
+                        }
+                        infoTextArea.appendText("新指挥官为" + soldierLeader.getName()+"\r\n");
+
+                    } else {
+                        //验证失败
+                        infoTextArea.appendText("- "+ soldierNew.getName() + "是间谍！认证失败！" + "\r\n");
+                        //确认间谍
+                        spies.add(soldierNew);
+                        soldierList.remove(soldierNew);
+                    }
+
+                    fromSoldierID = -1;
+                    toSoldierID = -1;
+                }
+
+            }
+
+
+        }
+    }
+
+    //当开箱后，所有士兵到达箱子后，点击信封士兵前往信封处
+    private void runToLetter()
+    {
+        if(!isOpenLetter && isOpenBox)
+        {
+            for(int i = 0; i < team.size(); i++){
+                Soldier soldier = team.get(i);
+                Point point = walkOne(soldier.getPosition(), sc.getLetter().getPosition());   //走一步
+                soldier.setPosition(point);
+            }
+
+            if(dis(soldierLeader.getPosition(), sc.getLetter().getPosition()) < MIN_DISTANCE + 20)
+            {
+                isOpenLetter = true;
+                isToLetter = false;
+                for(Soldier sd : team)
+                {
+                    if(sc.getLetter().canOpen(sd))
+                    {
+                        System.out.println("soildier" + sd.getID() + "能够打开机密文件！");
+                        infoTextArea.appendText("    - soildier" + sd.getID() + "能够打开机密文件！" + "\r\n");
+                    }
+                }
+            }
+        }
     }
 
 
@@ -160,9 +768,21 @@ public class MainViewController {
         infoTextArea.clear();
         teamInfoArea.clear();
 
-        soldierList.clear();;
+        soldierList.clear();
+
+        allMembers.clear();
+
         team.clear();
         spies.clear();
+
+        fromSoldierID = -1;
+        toSoldierID = -1;
+
+        isClick = false;
+
+        isOpenLetter = false;
+
+        isToLetter = false;
 
 //        sIndex = 0;
 //        arriveTargetSet.clear();
@@ -180,6 +800,9 @@ public class MainViewController {
         if(isLand)
         {
             isOk = true;
+
+            //创建队伍
+            initTeam();
         }
     }
 
@@ -245,7 +868,7 @@ public class MainViewController {
                                     }
                                     if(isInt){
                                         int spyNum = Integer.parseInt(str);
-                                        if(spyNum != 0 && !isLand){
+                                        if(!isLand){
                                             isLand = true;
 
                                             sc.initial(0, soldierNumber, shareNum, spyNum);
@@ -257,7 +880,7 @@ public class MainViewController {
                                             showGroup();
 
                                             //创建队伍
-                                            initTeam();
+                                            //initTeam();
                                         }
                                     } else {
                                         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -323,6 +946,8 @@ public class MainViewController {
         soldierList = sc.getSoldierList();
         //添加所有间谍
         soldierList.addAll(sc.getSpyList());
+
+        allMembers.addAll(soldierList);
         //打乱顺序
         Collections.shuffle(soldierList);
     }
@@ -553,6 +1178,8 @@ public class MainViewController {
         }
         imageLableBox.setGraphic(new ImageView(imageBox));
 
+        MouseClickedEventHandler(imageLableBox, 0);
+
         Label lableBox = new Label("     装备箱  ");
 
         VBox vb = new VBox();
@@ -570,6 +1197,19 @@ public class MainViewController {
         imageLableLetter.setGraphic(new ImageView(imageLetter));
 
         Label lableLetter = new Label("         机密信函  ");
+
+        MouseClickedEventHandler(imageLableLetter, -2);
+
+//        imageLableLetter.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent event) {
+//                if(event.getEventType().toString().equals("MOUSE_CLICKED"))
+//                {
+//                    System.out.println("Click letter!");
+//                    isToLetter = true;
+//                }
+//            }
+//        });
 
         VBox vbl = new VBox();
 //        System.out.println("letter:"+sc.getLetter().getPosition().getX()+","+sc.getLetter().getPosition().getY());
@@ -601,20 +1241,25 @@ public class MainViewController {
 
             imageLable.setGraphic(new ImageView(image));
 
+            MouseClickedEventHandler(imageLable, member.getID());
+
             Label lable = new Label(String.valueOf(member.getID()));
 
             HBox hb = new HBox();
-            if(isOpenBox)
-            {
-                hb.setLayoutX((index/3) * 40.0 + 70.0);
-                hb.setLayoutY((index%3) * 30.0);
-            }
-            else
+//            if(isOpenBox)
+//            {
+//                hb.setLayoutX((index/3) * 40.0 + 70.0);
+//                hb.setLayoutY((index%3) * 30.0);
+//            }
+//            else
             {
 //                hb.setLayoutX(member.getPosition().getX());
 //                hb.setLayoutY(member.getPosition().getY());
                 hb.setLayoutX(soldierLeader.getPosition().getX()+((index/3) * 42.0));
                 hb.setLayoutY(soldierLeader.getPosition().getY()+((index%3) * 32.0));
+
+//                member.setPosition(new Point((int)(soldierLeader.getPosition().getX()+((index/3) * 42.0)), (int)(soldierLeader.getPosition().getY()+((index%3) * 32.0))));
+
             }
             hb.getChildren().addAll(lable, imageLable);
 
@@ -628,9 +1273,11 @@ public class MainViewController {
             Label imageLable = new Label();
 
             Image image;
-            image = new Image(this.getClass().getResourceAsStream("soldierEnemy2.png"));
+            image = new Image(this.getClass().getResourceAsStream("soldierEnemy.png"));
 
             imageLable.setGraphic(new ImageView(image));
+
+            MouseClickedEventHandler(imageLable, spy.getID());
 
             Label lable = new Label(String.valueOf(spy.getID()));
 
@@ -652,6 +1299,8 @@ public class MainViewController {
             image = new Image(this.getClass().getResourceAsStream("soldier.png"));
 
             imageLable.setGraphic(new ImageView(image));
+
+            MouseClickedEventHandler(imageLable, soldier.getID());
 
             Label lable = new Label(String.valueOf(soldier.getID()));
 

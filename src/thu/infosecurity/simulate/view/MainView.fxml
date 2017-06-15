@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import javafx.scene.shape.*?>
 <?import java.lang.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
@@ -24,58 +26,9 @@
    <center>
       <SplitPane dividerPositions="0.7195685670261941" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="673.0" prefWidth="927.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="235.0" prefWidth="929.0">
                <children>
-                  <SplitPane dividerPositions="0.8726993865030674" layoutY="14.0" orientation="VERTICAL" prefHeight="654.0" prefWidth="931.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                    <items>
-                      <AnchorPane fx:id="drawPane" minHeight="0.0" minWidth="0.0" prefHeight="339.0" prefWidth="926.0">
-                           <children>
-                              <Group fx:id="sceneGroup" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                           </children>
-                        </AnchorPane>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="446.0" prefWidth="929.0">
-                           <children>
-                              <TitledPane animated="false" collapsible="false" layoutX="3.0" layoutY="-25.0" prefHeight="80.0" prefWidth="923.0" text="模拟信息设定" textOverrun="CLIP" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="0.0">
-                                <content>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="49.0" prefWidth="894.0">
-                                       <children>
-                                          <Label layoutX="14.0" layoutY="18.0" text="伞兵人数：">
-                                             <font>
-                                                <Font size="14.0" />
-                                             </font>
-                                          </Label>
-                                          <Label layoutX="282.0" layoutY="17.0" text="间谍人数：">
-                                             <font>
-                                                <Font size="14.0" />
-                                             </font>
-                                          </Label>
-                                          <HBox layoutX="419.0" layoutY="10.0" prefHeight="37.0" prefWidth="366.0" spacing="10.0">
-                                             <children>
-                                                <Button fx:id="landBtn" mnemonicParsing="false" onAction="#handleLandBtn" prefHeight="30.0" prefWidth="82.0" text="降落" />
-                                                <Button fx:id="startBtn" mnemonicParsing="false" onAction="#handleStartBtn" prefHeight="30.0" prefWidth="82.0" text="自动运行" />
-                                                <Button fx:id="pauseBtn" mnemonicParsing="false" onAction="#handlePauseBtn" prefHeight="30.0" prefWidth="82.0" text="暂停" />
-                                                <Button fx:id="resetBtn" mnemonicParsing="false" onAction="#handleResetBtn" prefHeight="30.0" prefWidth="82.0" text="重置" />
-                                             </children>
-                                          </HBox>
-                                          <TextField fx:id="soldierNum" layoutX="84.0" layoutY="16.0" prefHeight="25.0" prefWidth="46.0" text="7" />
-                                          <TextField fx:id="spyNum" layoutX="352.0" layoutY="15.0" prefHeight="25.0" prefWidth="46.0" text="3" />
-                                          <TextField fx:id="boxShareNum" layoutX="216.0" layoutY="16.0" prefHeight="25.0" prefWidth="46.0" text="3" />
-                                          <Label layoutX="146.0" layoutY="18.0" text="开箱人数：">
-                                             <font>
-                                                <Font size="14.0" />
-                                             </font>
-                                          </Label>
-                                       </children>
-                                    </AnchorPane>
-                                </content>
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </TitledPane>
-                           </children>
-                        </AnchorPane>
-                    </items>
-                  </SplitPane>
+                  <Group fx:id="sceneGroup" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
@@ -132,21 +85,77 @@
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
-          <Menu mnemonicParsing="false" text="File">
-            <items>
-              <MenuItem mnemonicParsing="false" onAction="#handleQuit" text="Quit" />
-            </items>
+          <Menu mnemonicParsing="false">
+               <graphic>
+                  <Label alignment="CENTER" contentDisplay="CENTER" text="伞兵人数：">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <padding>
+                        <Insets top="3.0" />
+                     </padding>
+                  </Label>
+               </graphic>
           </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
-            </items>
+          <Menu mnemonicParsing="false">
+               <graphic>
+                  <TextField fx:id="soldierNum" alignment="CENTER" prefHeight="25.0" prefWidth="46.0" text="7" />
+               </graphic>
           </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
+          <Menu mnemonicParsing="false">
+               <graphic>
+                  <Label text="开箱人数：">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <padding>
+                        <Insets top="3.0" />
+                     </padding>
+                  </Label>
+               </graphic>
           </Menu>
+            <Menu mnemonicParsing="false">
+               <graphic>
+                  <TextField fx:id="boxShareNum" alignment="CENTER" prefHeight="25.0" prefWidth="46.0" text="3" />
+               </graphic>
+            </Menu>
+            <Menu mnemonicParsing="false">
+               <graphic>
+                  <Label text="间谍人数：">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <padding>
+                        <Insets top="3.0" />
+                     </padding>
+                  </Label>
+               </graphic>
+            </Menu>
+            <Menu mnemonicParsing="false">
+               <graphic>
+                  <TextField fx:id="spyNum" alignment="CENTER" prefHeight="25.0" prefWidth="46.0" text="3" />
+               </graphic>
+            </Menu>
+            <Menu mnemonicParsing="false">
+               <graphic>
+                  <Button fx:id="landBtn" mnemonicParsing="false" onAction="#handleLandBtn" prefHeight="30.0" prefWidth="82.0" text="降落" />
+               </graphic>
+            </Menu>
+            <Menu mnemonicParsing="false">
+               <graphic>
+                  <Button fx:id="startBtn" mnemonicParsing="false" onAction="#handleStartBtn" prefHeight="30.0" prefWidth="82.0" text="自动运行" />
+               </graphic>
+            </Menu>
+            <Menu mnemonicParsing="false">
+               <graphic>
+                  <Button fx:id="pauseBtn" mnemonicParsing="false" onAction="#handlePauseBtn" prefHeight="30.0" prefWidth="82.0" text="暂停" />
+               </graphic>
+            </Menu>
+            <Menu mnemonicParsing="false">
+               <graphic>
+                  <Button fx:id="resetBtn" mnemonicParsing="false" onAction="#handleResetBtn" prefHeight="30.0" prefWidth="82.0" text="重置" />
+               </graphic>
+            </Menu>
         </menus>
       </MenuBar>
    </top>

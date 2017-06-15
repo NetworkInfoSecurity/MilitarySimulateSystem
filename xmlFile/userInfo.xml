@@ -16,7 +16,7 @@ ranges:         海军'S'，陆军'G'，空军'A'
         <position>682,259</position>
         <publicKey>180854786745822734968547923111966820333,7785391487685444343</publicKey>
         <privateKey>180854786745822734968547923111966820333,125735460058687390574064346050329735047</privateKey>
-        <secretLevel>T</secretLevel>
+        <secretLevel>C</secretLevel>
         <ranges>
             <range>S</range>
             <range>G</range>
@@ -28,7 +28,7 @@ ranges:         海军'S'，陆军'G'，空军'A'
         <position>529,446</position>
         <publicKey>484986057887349446282748452562050283673,4481228382178645219</publicKey>
         <privateKey>484986057887349446282748452562050283673,311143577012482823639108032227602665579</privateKey>
-        <secretLevel>C</secretLevel>
+        <secretLevel>S</secretLevel>
         <ranges>
             <range>S</range>
             <range>G</range>
@@ -50,7 +50,7 @@ ranges:         海军'S'，陆军'G'，空军'A'
         <position>535,206</position>
         <publicKey>4498702689568740324165515140546033102619,56499188281434154099</publicKey>
         <privateKey>4498702689568740324165515140546033102619,3537420959150237106182912551206221495083</privateKey>
-        <secretLevel>S</secretLevel>
+        <secretLevel>T</secretLevel>
         <ranges>
             <range>S</range>
             <range>G</range>

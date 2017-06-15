@@ -284,16 +284,12 @@ public class MainViewController {
     @FXML
     private void handleRbRandom(){
         soldierNum.setDisable(false);
-        boxShareNum.setDisable(false);
-        spyNum.setDisable(false);
         method = 0;
     }
 
     @FXML
     private void handleRbLoad(){
         soldierNum.setDisable(true);
-        boxShareNum.setDisable(true);
-        spyNum.setDisable(true);
         method = 1;
     }
     /**
@@ -509,10 +505,22 @@ public class MainViewController {
         soldierList = sc.getSoldierList();
         //添加所有间谍
         soldierList.addAll(sc.getSpyList());
-
-        allMembers.addAll(soldierList);
         //打乱顺序
         Collections.shuffle(soldierList);
+
+        //按照打乱的顺序重设士兵的ID和name
+        for(int i = 0; i < soldierList.size(); i++){
+            soldierList.get(i).setID(i+1);
+            //如果士兵的name前面是soldier，则认为是一起随机生成的，也替换掉
+            if(soldierList.get(i).getName().length() >= 7){
+                String namePrefix = soldierList.get(i).getName().substring(0,7);
+                if("soldier".equals(namePrefix)){
+                    soldierList.get(i).setName("soldier"+(i+1));
+                }
+            }
+        }
+        //备份士兵列表
+        allMembers.addAll(soldierList);
     }
 
     /**

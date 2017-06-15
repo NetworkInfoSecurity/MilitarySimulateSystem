@@ -49,7 +49,7 @@
                                                       <Font size="14.0" />
                                                    </font>
                                                 </Label>
-                                                <RadioButton fx:id="rbRandom" mnemonicParsing="false" prefHeight="19.0" prefWidth="76.0" selected="true" text="随机">
+                                                <RadioButton fx:id="rbRandom" mnemonicParsing="false" onAction="#handleRbRandom" prefHeight="19.0" prefWidth="76.0" selected="true" text="随机">
                                                    <font>
                                                       <Font size="14.0" />
                                                    </font>

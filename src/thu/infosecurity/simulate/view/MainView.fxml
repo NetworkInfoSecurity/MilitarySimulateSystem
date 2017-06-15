@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.shape.*?>
 <?import java.lang.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.Group?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioMenuItem?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="thu.infosecurity.simulate.view.MainViewController">
@@ -136,7 +135,7 @@
                   <TextField fx:id="spyNum" alignment="CENTER" prefHeight="25.0" prefWidth="46.0" text="3" />
                </graphic>
             </Menu>
-            <Menu mnemonicParsing="false">
+            <Menu>
                <graphic>
                   <Button fx:id="landBtn" mnemonicParsing="false" onAction="#handleLandBtn" prefHeight="30.0" prefWidth="82.0" text="降落" />
                </graphic>
@@ -149,6 +148,11 @@
             <Menu mnemonicParsing="false">
                <graphic>
                   <Button fx:id="pauseBtn" mnemonicParsing="false" onAction="#handlePauseBtn" prefHeight="30.0" prefWidth="82.0" text="暂停" />
+               </graphic>
+            </Menu>
+            <Menu mnemonicParsing="false">
+               <graphic>
+                  <Button fx:id="continueBtn" mnemonicParsing="false" onAction="#handleContinueBtn" prefHeight="30.0" prefWidth="82.0" text="继续" />
                </graphic>
             </Menu>
             <Menu mnemonicParsing="false">

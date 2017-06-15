@@ -121,11 +121,10 @@ public class Target {
 
     /**
      * 机密信函的返回内容
-     * @param targetBox
      * @return
      */
-    private String getMessages(Target targetBox){
-        return "剩余队员注意！装备箱位置在（"+targetBox.getPosition().getX()+","+targetBox.getPosition().getY()+")！";
+    public String getMessages(){
+        return "队员注意！装备箱位置在（"+(int)getPosition().getX()+","+(int)getPosition().getY()+")！";
     }
 
     /*辅助函数，用户访问控制*/

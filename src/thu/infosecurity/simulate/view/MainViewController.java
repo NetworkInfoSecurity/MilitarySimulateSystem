@@ -37,6 +37,8 @@ public class MainViewController {
     @FXML
     private Button pauseBtn;
     @FXML
+    private Button continueBtn;
+    @FXML
     private Button resetBtn;
 
     @FXML
@@ -299,7 +301,7 @@ public class MainViewController {
                         {
                             fromSoldierID = ID;
                             System.out.println("Click1: " + event.getX() + " : " + event.getY() + " ID: " + ID);
-                            infoTextArea.appendText("---Click1-ID: " + ID + "\r\n");
+                            infoTextArea.appendText("-- ClickFrom-ID: " + ID + "\r\n");
                         }
                         else
                         {
@@ -308,7 +310,7 @@ public class MainViewController {
                                 toSoldierID = ID;
 
                                 System.out.println("Click2: " + event.getX() + " : " + event.getY() + " ID: " + ID);
-                                infoTextArea.appendText("---Click2-ID: " + ID + "\r\n");
+                                infoTextArea.appendText("-- ClickTo-ID: " + ID + "\r\n");
 
                                 if(fromSoldierID == -2 || fromSoldierID == 0)
                                 {
@@ -563,6 +565,7 @@ public class MainViewController {
                     {
                         System.out.println("soildier" + soldierLetter.getID() + "能够打开机密文件！");
                         infoTextArea.appendText("    - soildier" + soldierLetter.getID() + "成功获取机密文件！" + "\r\n");
+                        infoTextArea.appendText("    - 内容：" + sc.getWeaponBox().getMessages() + "\r\n");
                     }
                     else
                     {
@@ -755,6 +758,11 @@ public class MainViewController {
     {
         isOk = false;
 
+        startBtn.setDisable(false);
+        landBtn.setDisable(false);
+        pauseBtn.setDisable(false);
+        continueBtn.setDisable(false);
+
         isLand = false;
 
         isOpenBox = false;
@@ -800,9 +808,21 @@ public class MainViewController {
         if(isLand)
         {
             isOk = true;
-
+            startBtn.setDisable(true);
             //创建队伍
             initTeam();
+        }
+    }
+
+    /**
+     * handle ContinueBtn event
+     */
+    @FXML
+    private void handleContinueBtn(){
+        if(isLand){
+            isOk = true;
+            pauseBtn.setDisable(false);
+            continueBtn.setDisable(true);
         }
     }
 
@@ -813,6 +833,8 @@ public class MainViewController {
     private void handlePauseBtn(){
         if(isLand){
             isOk = false;
+            pauseBtn.setDisable(true);
+            continueBtn.setDisable(false);
         }
     }
 
@@ -822,6 +844,7 @@ public class MainViewController {
     @FXML
     private void handleLandBtn()
     {
+        landBtn.setDisable(true);
         String str = soldierNum.getText();
         boolean isInt = true;
         if(!str.isEmpty()){
@@ -1196,7 +1219,7 @@ public class MainViewController {
         imageLetter = new Image(this.getClass().getResourceAsStream("letter.png"));
         imageLableLetter.setGraphic(new ImageView(imageLetter));
 
-        Label lableLetter = new Label("         机密信函  ");
+        Label lableLetter = new Label("机密信函  ");
 
         MouseClickedEventHandler(imageLableLetter, -2);
 

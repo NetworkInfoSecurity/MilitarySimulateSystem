@@ -345,6 +345,7 @@ public class MainViewController {
         {
             isOk = true;
             startBtn.setDisable(true);
+            continueBtn.setDisable(true);
             //创建队伍
             initTeam();
         }

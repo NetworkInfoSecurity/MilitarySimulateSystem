@@ -143,7 +143,7 @@
                     <items>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="356.0" prefWidth="374.0">
                            <children>
-                              <TitledPane animated="false" collapsible="false" layoutX="5.0" layoutY="7.0" prefHeight="431.0" prefWidth="364.0" text="团队消息" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                              <TitledPane animated="false" collapsible="false" layoutX="5.0" layoutY="7.0" prefHeight="431.0" prefWidth="364.0" text="团队信息" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                                 <content>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="355.0" prefWidth="362.0">
                                        <children>

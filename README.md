@@ -20,14 +20,14 @@ The second project of Network Information Security course
         - 验证士兵合法性
         - 生成秘钥
     - Millionaire.java: 百万富翁算法
-    - blindSignature,java：盲签名算法
-    - ElectronicVote.java: 电子投票算法  
+    - blindSignature.java：基于盲签名的电子投票算法
+    - ElectronicVote.java: 基于差分隐私的电子投票算法  
     - SharedKey.java: 共享秘钥算法  
         - 获得分享秘钥
-    - MyDES.javv：对称秘钥实现
+    - MyDES.java：对称秘钥实现
     - xmlReader.java: 文件读取接口
         - 从xml文件读取士兵数据
   - controller（逻辑控制）  
     - SceneInitial.java: 创建场景、初始化、模拟演习、调用算法等  
-    - SceneControl,java：一些场景通用接口
+    - SceneControl.java：一些场景通用接口
   - MainApp.java: 主函数、程序启动  

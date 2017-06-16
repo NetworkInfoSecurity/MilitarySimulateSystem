@@ -146,11 +146,11 @@ public class MainViewController {
                                 showGroup();
                             }
 
-                            if(isToLetter)
-                            {
-                                runToLetter();
-                                showGroup();
-                            }
+//                            if(isToLetter)
+//                            {
+//                                runToLetter();
+//                                showGroup();
+//                            }
                         }
                     });
                 }
@@ -744,7 +744,19 @@ public class MainViewController {
                         {
                             fromSoldierID = ID;
                             System.out.println("Click1: " + event.getX() + " : " + event.getY() + " ID: " + ID);
-                            infoTextArea.appendText("-- ClickFrom-ID: " + ID + "\r\n");
+                            if(ID == 0)
+                            {
+                                infoTextArea.appendText("-- ClickFrom: " + "设备箱" + "\r\n");
+                            }
+                            else if(ID == -2)
+                            {
+                                infoTextArea.appendText("-- ClickFrom: " + "机密信件" + "\r\n");
+                            }
+                            else
+                            {
+                                infoTextArea.appendText("-- ClickFrom: soldier" + ID + "\r\n");
+                            }
+
                         }
                         else
                         {
@@ -753,7 +765,18 @@ public class MainViewController {
                                 toSoldierID = ID;
 
                                 System.out.println("Click2: " + event.getX() + " : " + event.getY() + " ID: " + ID);
-                                infoTextArea.appendText("-- ClickTo-ID: " + ID + "\r\n");
+                                if(ID == 0)
+                                {
+                                    infoTextArea.appendText("-- ClickTo: " + "设备箱" + "\r\n");
+                                }
+                                else if(ID == -2)
+                                {
+                                    infoTextArea.appendText("-- ClickTo: " + "机密信件" + "\r\n");
+                                }
+                                else
+                                {
+                                    infoTextArea.appendText("-- ClickTo: soldier" + ID + "\r\n");
+                                }
 
                                 if(fromSoldierID == -2 || fromSoldierID == 0)
                                 {
@@ -931,6 +954,8 @@ public class MainViewController {
             {
                 Target targetBox = sc.getWeaponBox();
 
+                Soldier ssd = new Soldier();
+
                 boolean isIn = false; //表示起始点是否在team中
                 for(Soldier sd : team)
                 {
@@ -950,7 +975,6 @@ public class MainViewController {
                 }
                 else
                 {
-                    Soldier ssd = new Soldier();
                     for(Soldier s : allMembers)
                     {
                         if(s.getID() == fromSoldierID)
@@ -963,26 +987,94 @@ public class MainViewController {
                     ssd.setPosition(point);
                 }
 
-                //向箱子方向前进
-                //如果leader进入可验证箱子的范围，则team可以开始验证
-                if(dis(soldierLeader.getPosition(), targetBox.getPosition()) <= MIN_DISTANCE + 20)
+                if(isIn)
                 {
-                    //打开box的操作，输入team，调用共享秘钥模块，获取秘钥
-                    if (!targetBox.canOpen(team)) {
-                        //表示获取秘钥失败，开箱失败
-                        infoTextArea.appendText("- "+"验证失败，无法开启装备箱！" + "\r\n");
-                        //验证失败就返回，去寻找下一个士兵
+                    //向箱子方向前进
+                    //如果leader进入可验证箱子的范围，则team可以开始验证
+                    if(dis(soldierLeader.getPosition(), targetBox.getPosition()) <= MIN_DISTANCE + 20)
+                    {
+                        //打开box的操作，输入team，调用共享秘钥模块，获取秘钥
+                        if (!targetBox.canOpen(team)) {
+                            //表示获取秘钥失败，开箱失败
+                            infoTextArea.appendText("- "+"验证失败，无法开启装备箱！" + "\r\n");
+                            //验证失败就返回，去寻找下一个士兵
 
-                    } else {
-                        //获取秘钥成功，开箱成功
-                        infoTextArea.appendText("- "+"验证成功，装备箱开启成功！" + "\r\n");
-                        isOpenBox = true; //打开设备box成功
+                        } else {
+                            //获取秘钥成功，开箱成功
+                            infoTextArea.appendText("- "+"验证成功，装备箱开启成功！" + "\r\n");
+                            isOpenBox = true; //打开设备box成功
 
-                        //开箱成功后当即把所有间谍移除
-                        removeSpies();
+                            //开箱成功后当即把所有间谍移除
+                            removeSpies();
+                        }
+                        fromSoldierID = -1;
+                        toSoldierID = -1;
                     }
-                    fromSoldierID = -1;
-                    toSoldierID = -1;
+                }
+                else
+                {
+                    if(dis(ssd.getPosition(), targetBox.getPosition()) <= MIN_DISTANCE+20)
+                    {
+                        if(dis(ssd.getPosition(), soldierLeader.getPosition()) <= MIN_DISTANCE)
+                        {
+                            infoTextArea.appendText("- 队伍遇到" + ssd.getName() + "！" + "\r\n");
+                            if(RSA.soldierVerify(sc.getPublicRsaKeyList(), ssd, soldierLeader.getDESKey())){
+                                //验证成功，将新成员加入团队
+                                infoTextArea.appendText("- "+ ssd.getName() + "认证成功，加入队伍！" + "\r\n");
+                                team.add(ssd);
+                                soldierList.remove(ssd);
+                                //选举新的leader
+                                infoTextArea.appendText("- "+"开始指挥官选举：" + "\r\n");
+                                //百万富翁算法选举
+                                infoTextArea.appendText("   - "+"百万富翁：");
+//                        System.out.println(team.toString());
+                                ArrayList<Soldier> leaders = Millionaire.getTopLeader_Million(team);
+//                        System.out.println("leaderID: "+leaderID);
+                                if(leaders.size() > 1){
+                                    infoTextArea.appendText("最高军衔不止1人！" + "\r\n");
+                                    //进行电子投票
+                                    infoTextArea.appendText("   - "+"电子投票：");
+                                    //返回最终leader在leaders列表里面的索引
+                                    int tempIndex = blindSignature.vote(team, leaders.size());
+                                    //确定leader
+                                    soldierLeader = leaders.get(tempIndex-1);
+                                } else {
+                                    //确定leader
+                                    soldierLeader = leaders.get(0);
+                                }
+                                infoTextArea.appendText("新指挥官为" + soldierLeader.getName()+"\r\n");
+
+                            } else {
+                                //验证失败
+                                infoTextArea.appendText("- "+ ssd.getName() + "是间谍！认证失败！" + "\r\n");
+                                //确认间谍
+                                spies.add(ssd);
+                                soldierList.remove(ssd);
+                            }
+                        }
+                        else
+                        {
+                            ArrayList<Soldier> teamTemp = new ArrayList<>();
+                            teamTemp.add(ssd);
+                            //打开box的操作，输入team，调用共享秘钥模块，获取秘钥
+                            if (!targetBox.canOpen(teamTemp)) {
+                                //表示获取秘钥失败，开箱失败
+                                infoTextArea.appendText("- "+"验证失败，无法开启装备箱！" + "\r\n");
+                                //验证失败就返回，去寻找下一个士兵
+
+                            } else {
+                                //获取秘钥成功，开箱成功
+                                infoTextArea.appendText("- "+"验证成功，装备箱开启成功！" + "\r\n");
+                                isOpenBox = true; //打开设备box成功
+
+                                //开箱成功后当即把所有间谍移除
+                                removeSpies();
+                            }
+                        }
+
+                        fromSoldierID = -1;
+                        toSoldierID = -1;
+                    }
                 }
 
             }
@@ -998,26 +1090,34 @@ public class MainViewController {
                     }
                 }
 
-                Point point = walkOne(soldierLetter.getPosition(), sc.getLetter().getPosition());   //走一步
-                soldierLetter.setPosition(point);
-
-                if(dis(soldierLetter.getPosition(), sc.getLetter().getPosition()) < MIN_DISTANCE + 10)
+                if(team.contains(soldierLetter) && soldierLetter.getID() != soldierLeader.getID())
                 {
-                    System.out.println("soildier" + soldierLetter.getID() + "到达机密文件！");
-                    if(sc.getLetter().canOpen(soldierLetter))
-                    {
-                        System.out.println("soildier" + soldierLetter.getID() + "能够打开机密文件！");
-                        infoTextArea.appendText("    - soildier" + soldierLetter.getID() + "成功获取机密文件！" + "\r\n");
-                        infoTextArea.appendText("    - 内容：" + sc.getWeaponBox().getMessages() + "\r\n");
-                    }
-                    else
-                    {
-                        infoTextArea.appendText("    - soildier" + soldierLetter.getID() + "机密文件获取失败！" + "\r\n");
-                    }
+                    infoTextArea.appendText("    - soildier" + soldierLetter.getID() + "已在队伍中不必再获取机密文件！" + "\r\n");
                     fromSoldierID = -1;
                     toSoldierID = -1;
                 }
+                else
+                {
+                    Point point = walkOne(soldierLetter.getPosition(), sc.getLetter().getPosition());   //走一步
+                    soldierLetter.setPosition(point);
 
+                    if(dis(soldierLetter.getPosition(), sc.getLetter().getPosition()) < MIN_DISTANCE + 10)
+                    {
+                        System.out.println("soildier" + soldierLetter.getID() + "到达机密文件！");
+                        if(sc.getLetter().canOpen(soldierLetter))
+                        {
+                            System.out.println("soildier" + soldierLetter.getID() + "能够打开机密文件！");
+                            infoTextArea.appendText("    - soildier" + soldierLetter.getID() + "成功获取机密文件！" + "\r\n");
+                            infoTextArea.appendText("    - 内容：" + sc.getWeaponBox().getMessages() + "\r\n");
+                        }
+                        else
+                        {
+                            infoTextArea.appendText("    - soildier" + soldierLetter.getID() + "机密文件获取失败！" + "\r\n");
+                        }
+                        fromSoldierID = -1;
+                        toSoldierID = -1;
+                    }
+                }
 
             }
             else   //表示走向士兵

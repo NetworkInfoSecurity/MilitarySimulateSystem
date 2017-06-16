@@ -119,6 +119,14 @@ public class MainViewController {
     @FXML
     private void initialize() {
 
+        //给演示界面加背景
+//        sceneGroup.getChildren().clear();  //清空之前的图像
+//        sceneGroup.setAutoSizeChildren(true);
+//        Label background = new Label();
+//        Image imageBack = new Image(this.getClass().getResourceAsStream("background.jpg"));
+//        background.setGraphic(new ImageView(imageBack));
+//        sceneGroup.getChildren().add(background);
+
         //启动线程，每隔300ms更新goup
         refresh = new Thread() {
             public void run(){
@@ -312,6 +320,12 @@ public class MainViewController {
         gotoBox = true;
 
         sceneGroup.getChildren().clear();  //清空之前的图像
+        //给演示界面加背景
+//        sceneGroup.setAutoSizeChildren(true);
+//        Label background = new Label();
+//        Image imageBack = new Image(this.getClass().getResourceAsStream("background.jpg"));
+//        background.setGraphic(new ImageView(imageBack));
+//        sceneGroup.getChildren().add(background);
 
         sc = new SceneInitial();
 
@@ -1299,6 +1313,12 @@ public class MainViewController {
     private void showGroup() {
         sceneGroup.getChildren().clear();  //清空之前的图像
         sceneGroup.setAutoSizeChildren(true);
+
+        //给演示界面加背景
+//        Label background = new Label();
+//        Image imageBack = new Image(this.getClass().getResourceAsStream("background.jpg"));
+//        background.setGraphic(new ImageView(imageBack));
+//        sceneGroup.getChildren().add(background);
 
         //绘制装备箱
         Label imageLableBox = new Label();

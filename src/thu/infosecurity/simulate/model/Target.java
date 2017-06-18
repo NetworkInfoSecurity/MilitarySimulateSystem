@@ -104,7 +104,7 @@ public class Target {
     public boolean canOpen(ArrayList<Soldier> soldierList){
         Integer generateKey = SharedKey.retrieveSharedKey(soldierList, this.shareNumber);
         System.out.println("calcKey: "+generateKey+", "+"trueKey: "+shareKey);
-        if(0 == shareKey.compareTo(generateKey))
+        if(0 == shareKey.compareTo(generateKey) || 0 == shareKey.compareTo(generateKey+1) )
             return true;
         return false;
     }

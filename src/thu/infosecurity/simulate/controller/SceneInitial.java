@@ -154,7 +154,7 @@ public class SceneInitial {
         letter.setObjName("letter");
         letter.setPosition(new Point(SceneControl.generateRandom(0, 780), SceneControl.generateRandom(0, 620)));
         /*设置访问控制信息*/
-        letter.setSecretLevel("S");
+        letter.setSecretLevel("C");
         letter.setRange("S");
         /*设置共享秘钥信息*/
         letter.setShareFlag(false);

@@ -100,7 +100,6 @@ public class BigNum {
         for(int i = 0; i < bigNumberStr.length(); i++)
             bn[i] = bigNumberStr.charAt(bigNumberStr.length()-1-i);
     }
-
     /*BigNum that is safe, only used private*/
     public BigNum(char[] charArray){
         if(charArray == null){
@@ -110,12 +109,10 @@ public class BigNum {
         else
             this.bn = removePrefixZero(charArray);
     }
-
     /*不知道什么类*/
     public int length(){
         return bn.length;
     }
-
     /*比较类*/
     public boolean isBiggerThan(BigNum cmpNum) throws Exception{
         return 1 == charArrayCmp(this.bn, cmpNum.getCharArrayFromBn());
@@ -137,7 +134,6 @@ public class BigNum {
     public boolean isZero() throws Exception{
         return this.isSame(new BigNum("0"));
     }
-
     /*操作类*/
     public BigNum bigNumAdd(BigNum addend) throws Exception{
         char[] retCharArray = charArrayAdd(charArrayCopy(this.bn), addend.getCharArrayFromBn());
@@ -153,7 +149,6 @@ public class BigNum {
         char[] ans = charArraySub(charArrayCopy(this.bn), subend.getCharArrayFromBn());
         return new BigNum(ans);
     }
-
     public BigNum bigNumMul(BigNum multiplicand) throws Exception {
         BigInteger bi = this.toBigInteger().multiply(multiplicand.toBigInteger());
         return BigIntegerToBigNum(bi);
@@ -161,16 +156,13 @@ public class BigNum {
     public BigNum bigNumMul2(BigNum multiplicand) throws Exception{
         return new BigNum(charArrayMul(charArrayCopy(this.bn), multiplicand.getCharArrayFromBn()));
     }
-
     public BigNum bigNumDiv(BigNum divend) throws Exception{
         BigInteger bi = this.toBigInteger().divide(divend.toBigInteger());
         return BigIntegerToBigNum(bi);
     }
-
     public BigNum bigNumDiv2(BigNum divend) throws Exception{
         return new BigNum((charArrayDiv(charArrayCopy(this.bn), divend.getCharArrayFromBn())));
     }
-
     /*this ^ power*/
     public BigNum bigNumPower(BigNum power) throws Exception{
         if (power.isSame(new BigNum("0")))
@@ -201,7 +193,6 @@ public class BigNum {
         return ret;
 
     }
-
     /*计算this ^ power % mod*/
     public BigNum bigNumPowerMod(BigNum power, BigNum mod) throws Exception{
         if (power.isSame(new BigNum("0")))
@@ -248,8 +239,6 @@ public class BigNum {
         return temp1.bigNumMul(temp2).bigNumMod(mod);
         /**/
     }
-
-
     public String toString(){
         char[] bnTemp = new char[bn.length];
         for(int i = 0; i < bn.length; i++)
@@ -259,17 +248,13 @@ public class BigNum {
     public BigInteger toBigInteger(){
         return new BigInteger(this.toString());
     }
-
     public BigNum BigIntegerToBigNum(BigInteger integerVal) throws Exception{
         return new BigNum(integerVal.toString());
 
     }
-
-
     public char[] getCharArrayFromBn() throws Exception{
         return charArrayCopy(this.bn);
     }
-
     /*中间过程函数*/
     private int max(int a, int b){
         return a > b ? a : b;
@@ -387,7 +372,6 @@ public class BigNum {
         return ans;
 
     }
-
     /*比较两个数的大小，1表示a>b,0表示a=b,-1表示a<b*/
     private int charArrayCmp(char[] charListA, char[] charListB){
         char[] a = removePrefixZero(charListA);
@@ -487,7 +471,6 @@ public class BigNum {
             System.out.printf("%c", charList[i]);
         System.out.println();
     }
-
     /*乘以10 ： 543 -> 00543*/
     private char[] charArrayPowersTen(char[] charArray, int times) throws  Exception{
         if(charArray == null || times < 0)
@@ -512,8 +495,6 @@ public class BigNum {
             newArray[i] = arr[i];
         return newArray;
     }
-
-
     /**
      * Generate a new BigNum
      * i.e. if the input length is 5, might return bignum(32452) which stores as "25423" and means 32452
@@ -530,7 +511,6 @@ public class BigNum {
         }
         return new BigNum(charArray);
     }
-
     /**
      * Generate a new BigNum
      * i.e. if the input length is 5, might return bignum(32452) which stores as "25423" and means 32452
@@ -552,8 +532,6 @@ public class BigNum {
 
         return new BigNum(charArray);
     }
-
-
     /**
      * generate a bignum ranges over lowerBound and upperBound
      */
@@ -569,7 +547,6 @@ public class BigNum {
 
 
     }
-
     /**
      * MyRSA if the BigNum is prime or not
      * @param : security param, means the round to MyRSA
@@ -653,7 +630,6 @@ public class BigNum {
         }
         return true;
     }
-
     /**
      * BigNum - 1 = 2^s * d
      * return s
@@ -674,8 +650,6 @@ public class BigNum {
         System.out.println("ret = " + ret);
         return ret;
     }
-
-
     public static BigNum generatePrime(int length, int accuracy) throws Exception{
         BigNum prime;
 
@@ -694,7 +668,6 @@ public class BigNum {
         }
         return prime;
     }
-
     /**
      * Generate number a that meets (a, n) = 1;
      * @return a
@@ -709,7 +682,6 @@ public class BigNum {
             }
         }
     }
-    
     public static BigNum genPrime(int length, int flag) throws Exception{
         Random rd = new Random();
         //System.out.println("gen" + rd.toString());

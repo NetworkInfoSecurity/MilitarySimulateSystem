@@ -455,6 +455,12 @@ public class MainViewController {
 
                                             //创建队伍
                                             //initTeam();
+
+                                            //孙林添加，2016.06.19
+                                            System.out.println("Print SoldierList in main");
+                                            for (int i = 0; i < soldierList.size(); i++) {
+                                                System.out.println(soldierList.get(i));
+                                            }
                                         }
                                     } else {
                                         Alert alert = new Alert(Alert.AlertType.ERROR);
